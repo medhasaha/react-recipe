@@ -23,34 +23,41 @@ const style = theme => ({
 	root : {
 
 	},
-	background : {
-		// backgroundImage : `url(${background9})`,
-		backgroundRepeat: "no-repeat",
-		backgroundSize : "cover",
-		backgroundPosition : "center center",
-		height : "600px",
+	bgGrid : {
+		position: "relative",
+		margin: "0 auto",
+		width: "100%",
+		height: "600px",
+	},
+	bgImage : {
 		width : "100%",
-		"-webkit-animation": "$fadeinout 8s ease",
-		"animation": "$fadeinout 8s ease",
-		"animation-iteration-count" : "infinite",
-		"animation-delay":"3s"
-		// transition: "background-image 2.5s ease-in-out"
+		height : "600px",
+		objectFit : "cover",
+		objectPosition : "center center",
+		position: "absolute",
+		left: 0,
+		top: 0,
+		opacity: 0,
+		animation: "$fade-in-out 81s linear infinite",
 	},
-	"@-webkit-keyframes fadeinout" : {
-		"0%" :  { opacity: 0.3 },
-		"100%" : { opacity: 0.3},
-		"50%" : { opacity: 1 }
-	},
-	"@keyframes fadeinout" : {
-		"0%" : { opacity: 0.3 },
-		"100%" : { opacity: 0.3},
-		"50%" : { opacity: 1 }
+	"@keyframes fade-in-out" : {
+		"0%" : { opacity: 0 } ,
+		"01.23%" : { opacity: 1 },
+		"02.46%" : { opacity: 1 },
+		"03.69%" : { opacity: 1 },
+		"04.92%" : { opacity: 1 },
+		"06.15%" : { opacity: 1 },
+		"07.38%" : { opacity: 1 },
+		"08.61%" : { opacity: 1 },
+		"09.84%" : { opacity: 1 },
+		"19.68%" : { opacity: 0 },
+		"100%" : { opacity: 0 }
 	},
 	autocomplete : {
 		backgroundColor : "white",
-		margin : "auto",
-		position : "relative",
-		top : "40%"
+		position : "absolute",
+		top : "40%",
+		left : "25%"
 	},
 })
 
@@ -59,36 +66,19 @@ class Recipes extends Component {
 		super(props);
 
 		this.state = {
-			currentBackgroundIndex : 0,
-			intervalId : 0,
 			autocompleteOptions : [],
 			input : "",
 			loading : false,
 			open : false,
-			currentCount : 10
 		}
 	}
 
 	componentDidMount(){
-		var intervalId = setInterval(this.timer, 8000);
-   // store intervalId in the state so it can be accessed later:
-   this.setState({intervalId: intervalId});
+
 	}
 
 	componentWillUnmount() {
-		// use intervalId from the state to clear the interval
-		clearInterval(this.state.intervalId);
-	}
-	
-	timer = () => {
-		// setState method is used to update the state
-		var newIndex = this.state.currentBackgroundIndex + 1;
-		if(newIndex <= 8) { 
-			this.setState({ currentBackgroundIndex : newIndex });
-		} else {
-			// clearInterval(this.state.intervalId);
-			this.setState({ currentBackgroundIndex : 0 });
-		}
+
 	}
 
 	recipeAutocompleteMethod = (input) => {
@@ -113,25 +103,24 @@ class Recipes extends Component {
 
   render(){
 		const { classes } = this.props;
-		console.log(this.state.currentBackgroundIndex)
 		return(
 			<Grid container className = {classes.root}>
-				<Grid item xs = {12} 
-				      className = {classes.background} 
-							style = {{backgroundImage : `url(${backgroundArray[this.state.currentBackgroundIndex]})`}}>
+				<Grid item xs = {12} className = {classes.bgGrid}>
+				  <img src = {background1} className = {classes.bgImage} style = {{ "animationDelay": "0s" }}/>
+					<img src = {background2} className = {classes.bgImage} style = {{ "animationDelay": "9s" }}/>
+					<img src = {background3} className = {classes.bgImage} style = {{ "animationDelay": "18s" }}/>
+					<img src = {background4} className = {classes.bgImage} style = {{ "animationDelay": "27s" }}/>
+					<img src = {background5} className = {classes.bgImage} style = {{ "animationDelay": "36s" }}/>
+					<img src = {background6} className = {classes.bgImage} style = {{ "animationDelay": "45s" }}/>
+					<img src = {background7} className = {classes.bgImage} style = {{ "animationDelay": "54s" }}/>
+					<img src = {background8} className = {classes.bgImage} style = {{ "animationDelay": "63s" }}/>
+					<img src = {background9} className = {classes.bgImage} style = {{ "animationDelay": "72s" }}/>
+
 					<Autocomplete
 						options={this.state.autocompleteOptions}
 						getOptionLabel={(option) => option.title}
-						onOpen={() => {
-							this.setState({
-								open : true
-							})
-						}}
-						onClose={() => {
-							this.setState({
-								open : false
-							})
-						}}
+						onOpen={() => {this.setState({open : true}) }}
+						onClose={() => { this.setState({open : false}) }}
 						loading = {this.state.loading}
 						style={{ width: "50%" }}
 						className = {classes.autocomplete}
