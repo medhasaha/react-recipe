@@ -1,4 +1,5 @@
 const BASE_URL = "https://api.spoonacular.com"
+const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
 let id=1;
 
 const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
@@ -20,5 +21,6 @@ export default {
 	RANDOM_RECIPES,
 	RECIPE_TASTE,
 	RECIPE_NUTRITION,
-	RECIPE_INSTRUCTION
+	RECIPE_INSTRUCTION,
+	SPLASH_URL
 };

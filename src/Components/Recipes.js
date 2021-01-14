@@ -29,16 +29,40 @@ const style = theme => ({
 		width: "100%",
 		height: "600px",
 	},
-	bgImage : {
+	bgDiv : {
 		width : "100%",
 		height : "600px",
+		opacity: 0,
+		animation: "$fade-in-out 81s linear infinite"
+	},
+	bgImage : {
+		width : "100%",
+		height : "100%",
+		// height : "600px",
 		objectFit : "cover",
 		objectPosition : "center center",
 		position: "absolute",
 		left: 0,
 		top: 0,
-		opacity: 0,
-		animation: "$fade-in-out 81s linear infinite",
+		// opacity: 0,
+		// animation: "$fade-in-out 81s linear infinite",
+	},
+	attribution : {
+		position: "absolute",
+		// left: 0,
+		// top: 0,
+		right : 10,
+		bottom : 0,
+		zIndex : "100",
+		color : "white",
+		textShadow: "0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black"
+	},
+	attributionLink : {
+		textDecoration : "none",
+		color : "white",
+		"&:hover": {
+      textDecoration : "underline"
+    }
 	},
 	"@keyframes fade-in-out" : {
 		"0%" : { opacity: 0 } ,
@@ -101,21 +125,83 @@ class Recipes extends Component {
 		)
 	}
 
+	sliderJSX = () => {
+		const { classes } = this.props;
+		return(
+			<React.Fragment>
+				<div style = {{ "animationDelay": "0s" }} className = {classes.bgDiv}>
+					<img src = {background1} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+					  Photo by <a href="https://unsplash.com/@brookelark?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Brooke Lark</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "9s" }} className = {classes.bgDiv}>
+					<img src = {background2} className = {classes.bgImage}/>
+					<span className = {classes.attribution}>
+						Photo by <a href="https://unsplash.com/@lvnatikk?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Lily Banse</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "18s" }} className = {classes.bgDiv}>
+					<img src = {background3} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+					  Photo by <a href="https://unsplash.com/@therachelstory?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Rachel Park</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "27s" }} className = {classes.bgDiv}>
+					<img src = {background4} className = {classes.bgImage} />
+						<span className = {classes.attribution}>
+							Photo by <a href="https://unsplash.com/@annapelzer?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Anna Pelzer</a> 
+							{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+						</span>
+				</div>
+				<div style = {{ "animationDelay": "36s" }} className = {classes.bgDiv}>
+					<img src = {background5} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+						Photo by <a href="https://unsplash.com/@alexmunsell?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Alex Munsell</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "45s" }} className = {classes.bgDiv}>
+					<img src = {background6} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+						Photo by <a href="https://unsplash.com/@1ncreased?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Lidye</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "54s" }} className = {classes.bgDiv}>
+					<img src = {background7} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+						Photo by <a href="https://unsplash.com/@eaterscollective?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Eaters Collective</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "63s" }} className = {classes.bgDiv}>
+					<img src = {background8} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+						Photo by <a href="https://unsplash.com/@carissagan?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Carissa Gan</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+				<div style = {{ "animationDelay": "72s" }} className = {classes.bgDiv}>
+					<img src = {background9} className = {classes.bgImage} />
+					<span className = {classes.attribution}>
+					  Photo by <a href="https://unsplash.com/@abhishek_sanwa?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Abhishek Sanwa Limbu</a> 
+						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
+					</span>
+				</div>
+			</React.Fragment>
+		)
+	}
+
   render(){
 		const { classes } = this.props;
 		return(
 			<Grid container className = {classes.root}>
 				<Grid item xs = {12} className = {classes.bgGrid}>
-				  <img src = {background1} className = {classes.bgImage} style = {{ "animationDelay": "0s" }}/>
-					<img src = {background2} className = {classes.bgImage} style = {{ "animationDelay": "9s" }}/>
-					<img src = {background3} className = {classes.bgImage} style = {{ "animationDelay": "18s" }}/>
-					<img src = {background4} className = {classes.bgImage} style = {{ "animationDelay": "27s" }}/>
-					<img src = {background5} className = {classes.bgImage} style = {{ "animationDelay": "36s" }}/>
-					<img src = {background6} className = {classes.bgImage} style = {{ "animationDelay": "45s" }}/>
-					<img src = {background7} className = {classes.bgImage} style = {{ "animationDelay": "54s" }}/>
-					<img src = {background8} className = {classes.bgImage} style = {{ "animationDelay": "63s" }}/>
-					<img src = {background9} className = {classes.bgImage} style = {{ "animationDelay": "72s" }}/>
-
+					{this.sliderJSX()}
 					<Autocomplete
 						options={this.state.autocompleteOptions}
 						getOptionLabel={(option) => option.title}
