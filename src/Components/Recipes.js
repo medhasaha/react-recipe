@@ -16,9 +16,64 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import SearchIcon from '@material-ui/icons/Search';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+
 
 const backgroundArray = [background1, background2, background3, background4, background5, background6, background7, background8, background9];
-
+const sample = [
+	{
+	"id": 133439,
+	"title": "cake",
+	"imageType": "jpg"
+	},
+	{
+	"id": 165381,
+	"title": "chai",
+	"imageType": "jpg"
+	},
+	{
+	"id": 495920,
+	"title": "cups",
+	"imageType": "jpg"
+	},
+	{
+	"id": 34150,
+	"title": "chili",
+	"imageType": "jpg"
+	},
+	{
+	"id": 1125636,
+	"title": "crema",
+	"imageType": "jpg"
+	},
+	{
+	"id": 102861,
+	"title": "cacik",
+	"imageType": "jpg"
+	},
+	{
+	"id": 630955,
+	"title": "craig",
+	"imageType": "jpg"
+	},
+	{
+	"id": 117905,
+	"title": "champ",
+	"imageType": "png"
+	},
+	{
+	"id": 234120,
+	"title": "calas",
+	"imageType": "jpg?itok=m1zglj97"
+	},
+	{
+	"id": 376278,
+	"title": "clams",
+	"imageType": "jpeg"
+	}
+	]
 const style = theme => ({
 	root : {
 
@@ -38,19 +93,14 @@ const style = theme => ({
 	bgImage : {
 		width : "100%",
 		height : "100%",
-		// height : "600px",
 		objectFit : "cover",
 		objectPosition : "center center",
 		position: "absolute",
 		left: 0,
 		top: 0,
-		// opacity: 0,
-		// animation: "$fade-in-out 81s linear infinite",
 	},
 	attribution : {
 		position: "absolute",
-		// left: 0,
-		// top: 0,
 		right : 10,
 		bottom : 0,
 		zIndex : "100",
@@ -77,21 +127,39 @@ const style = theme => ({
 		"19.68%" : { opacity: 0 },
 		"100%" : { opacity: 0 }
 	},
-	autocomplete : {
-		backgroundColor : "white",
+	autocompleteGrid : {
 		position : "absolute",
 		top : "40%",
-		left : "25%"
 	},
+	gridCenter : {
+		alignItems : "center",
+		justifyContent : "center",
+		display : "flex"
+	},
+	autocomplete : {
+		backgroundColor : "white",
+		display : "inline-flex",
+		margin : "0px 2px 0px 0px"
+	},
+	searchButton : {
+		height  : "100%",
+		border: "3px solid #fff",
+    backgroundColor: "rgba(255,255,255,0.2)",
+	},
+	searchIcon : {
+		color : "white",
+		fontSize : "2rem"
+	}
 })
 
 class Recipes extends Component {
 	constructor(props){
 		super(props);
-
+		console.log(this.props)
 		this.state = {
 			autocompleteOptions : [],
-			input : "",
+			value : "",
+			inputValue : "",
 			loading : false,
 			open : false,
 		}
@@ -105,24 +173,44 @@ class Recipes extends Component {
 
 	}
 
-	recipeAutocompleteMethod = (input) => {
-		recipeAutocompleteAPI(input)
+	recipeAutocompleteMethod = (value) => {
+		recipeAutocompleteAPI(value)
 		.then(res => {
 			console.log(res)
 			this.setState({
-				autocompleteOptions : res,
+				autocompleteOptions : sample,
 				loading : false
 			})
+		}).catch(err => console.log(err))
+	}
+
+	autocompleteChangeHandler = (e, newValue) => {
+		// console.log("newValue",newValue)
+		this.setState({
+			value : newValue,
+			loading : this.state.open === true && this.state.autocompleteOptions.length > 0 ? true : false,
 		})
 	}
 
-	autocompleteChangeHandler = (e) => {
+	autocompleteInputChangeHandler = (e, newInputValue) => {
+		// console.log("newInputValue",newInputValue)
 		this.setState({
-			input : e.target.value,
-			loading : this.state.open === true && this.state.autocompleteOptions.length > 0 ? true : false,
+			inputValue : newInputValue
 		}
-		, () => {this.recipeAutocompleteMethod(this.state.input)}
+		// , () => {this.recipeAutocompleteMethod(this.state.value)}
+		, () => {
+			this.setState({
+				autocompleteOptions : sample,
+				loading : false
+			})
+		}
 		)
+	}
+
+	redirectToSearch = () => {
+		this.props.history.push({
+			pathname: `${this.props.baseURL}/search-results/${this.state.inputValue}`,
+		});
 	}
 
 	sliderJSX = () => {
@@ -202,27 +290,38 @@ class Recipes extends Component {
 			<Grid container className = {classes.root}>
 				<Grid item xs = {12} className = {classes.bgGrid}>
 					{this.sliderJSX()}
-					<Autocomplete
-						options={this.state.autocompleteOptions}
-						getOptionLabel={(option) => option.title}
-						onOpen={() => {this.setState({open : true}) }}
-						onClose={() => { this.setState({open : false}) }}
-						loading = {this.state.loading}
-						style={{ width: "50%" }}
-						className = {classes.autocomplete}
-						renderInput={(params) => <TextField {...params} 
-																				variant="outlined" 	value = {this.state.input}
-																				InputProps={{
-																					...params.InputProps,
-																					endAdornment: (
-																						<React.Fragment>
-																							{this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
-																							{params.InputProps.endAdornment}
-																						</React.Fragment>
-																					),
-																				}}					
-						                            onChange = {(e) => this.autocompleteChangeHandler(e)}
-						/>}/>
+						<Grid container className = {classes.autocompleteGrid}>
+						  <Grid item xs = {12} className = {classes.gridCenter}>
+							<Autocomplete
+								options={this.state.autocompleteOptions}
+								getOptionLabel={(option) => option.title}
+								onOpen={() => {this.setState({open : true}) }}
+								onClose={() => { this.setState({open : false}) }}
+								loading = {this.state.loading}
+								style={{ width: "45%" }}
+								className = {classes.autocomplete}
+								freeSolo
+								disableClearable
+								value = {this.state.value}//value selected by the user
+								onChange = {(e, newValue) => this.autocompleteChangeHandler(e, newValue)}
+								inputValue = {this.state.inputValue} //value displayed in textbox
+								onInputChange = {(e, newInputValue) => {this.autocompleteInputChangeHandler(e, newInputValue)}}
+								renderInput={(params) => 
+									<TextField {...params} variant="outlined"
+																				InputProps={{...params.InputProps,
+																											endAdornment: (
+																												<React.Fragment>
+																													{this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
+																													{params.InputProps.endAdornment}
+																												</React.Fragment>),
+																										}} />} />
+							{/*<IconButton disabled color="primary" className = {classes.searchButton}>*/}
+							<Button variant="contained" disableElevation className = {classes.searchButton} onClick = {this.redirectToSearch}>
+							  <SearchIcon className = {classes.searchIcon}/>
+						  </Button>
+							{/*</IconButton>*/}
+							</Grid>
+						</Grid>
 				</Grid>
 			</Grid>
 		)

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import Recipes from './Recipes.js'
+import RecipeSearch from './RecipeSearch.js'
+import RecipeDetails from './RecipeDetails.js'
 
 const App = () => {
   return (
@@ -8,9 +10,11 @@ const App = () => {
       <BrowserRouter>
         <div>
           <Route exact path="/">
-            <Redirect to="/recipe" />
+            <Redirect to="/recipe/home" />
           </Route>
-          <Route path="/recipe" render={(props) => <Recipes {...props} baseURL={"/recipe"} />} />
+          <Route path="/recipe/home" render={(props) => <Recipes {...props} baseURL={"/recipe"} />} />
+          <Route path="/recipe/search-results/:query" render={(props) => <RecipeSearch {...props} baseURL={"/recipe"} />} />
+          <Route path="/recipe/details/:id" render={(props) => <RecipeDetails {...props} baseURL={"/recipe"} />} />
         </div>
       </BrowserRouter>    
     </div>

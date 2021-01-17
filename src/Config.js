@@ -1,11 +1,13 @@
 const BASE_URL = "https://api.spoonacular.com"
 const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
-let id=1;
+let id = 1;
+const IMAGE_URL_RECIPE = " https://spoonacular.com/recipeImages/";
+const IMAGE_URL_PRODUCT = "https://spoonacular.com/productImages/"
 
 const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
 const INGREDIENT_SEARCH = BASE_URL + `/recipes/findByIngredients`
-const RECIPE_DETAILS_URL = BASE_URL + `/recipes/${id}/information`;
-const SIMILAR_RECIPES_URL = BASE_URL + `/recipes/${id}/similar`;
+const RECIPE_DETAILS_URL = BASE_URL + `/recipes`;
+const SIMILAR_RECIPES_URL = BASE_URL + `/recipes`;
 const RANDOM_RECIPES = BASE_URL + `/recipes/random`;
 const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipes/autocomplete`;
 const RECIPE_TASTE = BASE_URL + `/recipes/${id}/tasteWidget.json`;
@@ -22,5 +24,7 @@ export default {
 	RECIPE_TASTE,
 	RECIPE_NUTRITION,
 	RECIPE_INSTRUCTION,
-	SPLASH_URL
+	SPLASH_URL,
+	IMAGE_URL_RECIPE,
+	IMAGE_URL_PRODUCT
 };
