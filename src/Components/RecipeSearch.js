@@ -105,8 +105,20 @@ class RecipeSearch extends Component {
 		// })
 	}
 
-	componentDidUpdate() {
-
+	componentDidUpdate(prevProps, prevState) {
+		if ( prevProps.match.params.query && this.props.match.params.query && prevProps.match.params.query !== this.props.match.params.query){
+      if (this.props.location.state && this.props.location.state.data) {
+        this.setState({ 
+					...this.props.location.state.data 
+				}, () => {
+          this.setState({
+            isLoaded: true
+          });
+        });
+      } else {
+        this.recipeSearchMethod(this.props.match.params.id);
+      }
+    }
 	}
 
 	recipeSearchMethod = (value) => {
@@ -120,8 +132,7 @@ class RecipeSearch extends Component {
 			}
 			, () => {
 				this.props.history.replace(this.props.history.location.pathname,{ data: { results: res.results}});
-			}
-			)
+			})
 		}).catch(err => console.log(err))
 	}
 

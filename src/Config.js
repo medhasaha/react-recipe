@@ -13,6 +13,7 @@ const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipes/autocomplete`;
 const RECIPE_TASTE = BASE_URL + `/recipes/${id}/tasteWidget.json`;
 const RECIPE_NUTRITION = BASE_URL + `/recipes/${id}/nutritionWidget.json`;
 const RECIPE_INSTRUCTION = BASE_URL + `/recipes/${id}/analyzedInstructions`;
+const RECIPE_EQUIPMENTS = BASE_URL + `/recipes`;
 
 export default {
 	RECIPES_AUTOCOMPLETE,
@@ -24,6 +25,7 @@ export default {
 	RECIPE_TASTE,
 	RECIPE_NUTRITION,
 	RECIPE_INSTRUCTION,
+	RECIPE_EQUIPMENTS,
 	SPLASH_URL,
 	IMAGE_URL_RECIPE,
 	IMAGE_URL_PRODUCT

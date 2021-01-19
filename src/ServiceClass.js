@@ -48,6 +48,18 @@ export const similarRecipesAPI =(id) =>{
 		.catch(error => {console.log("[ServiceClass] recipeDetailsAPI error",error)})
 }
 
+export const recipeEquipmentsAPI =(id) =>{
+	let queryURL = CONFIG.RECIPE_EQUIPMENTS + `/${id}/equipmentWidget.json?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] recipeEquipmentsAPI error",error)})
+}
+
 export const attributionArray =  [
 	{
 		background : "background1",
