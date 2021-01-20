@@ -9,9 +9,9 @@ const App = () => {
     <div className="App">
       <BrowserRouter>
         <div>
-          <Route exact path="/">
+          {/*<Route exact path="/">
             <Redirect to="/recipe/home" />
-          </Route>
+  </Route>*/}
           <Route path="/recipe/home" render={(props) => <Recipes {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/search-results/:query" render={(props) => <RecipeSearch {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/details/:id" render={(props) => <RecipeDetails {...props} baseURL={"/recipe"} />} />

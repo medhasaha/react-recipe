@@ -2,7 +2,9 @@ const BASE_URL = "https://api.spoonacular.com"
 const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
 let id = 1;
 const IMAGE_URL_RECIPE = " https://spoonacular.com/recipeImages/";
-const IMAGE_URL_PRODUCT = "https://spoonacular.com/productImages/"
+const IMAGE_URL_PRODUCT = "https://spoonacular.com/productImages/";
+const IMAGE_URL_INGREDIENT = "https://spoonacular.com/cdn/ingredients"
+const IMAGE_URL_EQUIPMENT = "https://spoonacular.com/cdn/equipment"
 
 const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
 const INGREDIENT_SEARCH = BASE_URL + `/recipes/findByIngredients`
@@ -28,5 +30,7 @@ export default {
 	RECIPE_EQUIPMENTS,
 	SPLASH_URL,
 	IMAGE_URL_RECIPE,
-	IMAGE_URL_PRODUCT
+	IMAGE_URL_PRODUCT,
+	IMAGE_URL_INGREDIENT,
+	IMAGE_URL_EQUIPMENT
 };
