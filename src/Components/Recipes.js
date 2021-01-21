@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {recipeAutocompleteAPI} from '../ServiceClass.js'
+import NavBar from './NavBar.js'
 
 import background1 from '../Assets/Images/background/background1.jpg';
 import background2 from '../Assets/Images/background/background2.jpg';
@@ -79,6 +80,7 @@ const style = theme => ({
 
 	},
 	bgGrid : {
+		top : "-1px",
 		position: "relative",
 		margin: "0 auto",
 		width: "100%",
@@ -288,6 +290,9 @@ class Recipes extends Component {
 		const { classes } = this.props;
 		return(
 			<Grid container className = {classes.root}>
+				<Grid item xs = {12}>
+					<NavBar/>
+				</Grid>
 				<Grid item xs = {12} className = {classes.bgGrid}>
 					{this.sliderJSX()}
 						<Grid container className = {classes.autocompleteGrid}>

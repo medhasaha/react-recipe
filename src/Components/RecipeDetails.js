@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {recipeDetailsAPI, similarRecipesAPI, recipeEquipmentsAPI} from '../ServiceClass.js';
 import CONFIG from '../Config.js'
 import RecipeCard from './RecipeCard.js'
+import NutiritionChart from './NutritionChart.js'
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -324,6 +325,10 @@ class RecipeDetails extends Component {
 						</Grid>
 							{this.instructionsJSX()}
 					</Grid>
+				</Grid>
+
+				<Grid item xs = {12}>
+					<NutiritionChart data = {this.state.details.nutrition.nutrients}/>
 				</Grid>
 			</Grid>
 		)
