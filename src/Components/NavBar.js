@@ -16,11 +16,12 @@ const style = theme => ({
     backgroundColor: "#0d1010",
 	},
 	title: {
-    flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+		padding : "0px 20px 0px 0px",
+		margin : "0px 20px 0px 0px",
+		// borderRight : "2px solid white",
+	},
+	appBarItems : {
+		flexGrow: 1,
 	},
 	logo : {
 		height : "32px", 
@@ -64,7 +65,12 @@ const style = theme => ({
         width: '20ch',
       },
     },
-  },
+	},
+	login : {
+		// padding : "0px 0px 0px 20px",
+		margin : "0px 0px 0px 20px",
+		// borderRight : "2px solid white",
+	}
 })
 
 class NavBar extends Component {
@@ -81,9 +87,14 @@ class NavBar extends Component {
 			<div className={classes.root}>
 				<AppBar position="static" className = {classes.appBar}>
 					<Toolbar>
-						<Typography className={classes.title} variant="h6" noWrap>
-							Recipe 	<img src = {LogoIcon} className = {classes.logo}/>
-						</Typography>
+					  <div>
+							<Typography className={classes.title} variant="h6" noWrap>
+								Recipe 	<img src = {LogoIcon} className = {classes.logo}/>
+							</Typography>
+						</div>
+						<div className = {classes.appBarItems}>
+						  
+						</div>
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
 								<SearchIcon />
@@ -91,6 +102,11 @@ class NavBar extends Component {
 							<InputBase placeholder="Search…"
 								classes={{ root: classes.inputRoot, input: classes.inputInput, }}
 								inputProps={{ 'aria-label': 'search' }}/>
+						</div>
+						<div>
+							<Typography className = {classes.login} variant="button" noWrap>
+							  login/ Signup
+						  </Typography>
 						</div>
 					</Toolbar>
 				</AppBar>

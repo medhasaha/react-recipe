@@ -20,6 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
 
 
 const backgroundArray = [background1, background2, background3, background4, background5, background6, background7, background8, background9];
@@ -84,11 +85,11 @@ const style = theme => ({
 		position: "relative",
 		margin: "0 auto",
 		width: "100%",
-		height: "600px",
+		height: "100vh",
 	},
 	bgDiv : {
 		width : "100%",
-		height : "600px",
+		// height : "100vh",
 		opacity: 0,
 		animation: "$fade-in-out 81s linear infinite"
 	},
@@ -139,9 +140,11 @@ const style = theme => ({
 		display : "flex"
 	},
 	autocomplete : {
-		backgroundColor : "white",
+		// backgroundColor : "white",
 		display : "inline-flex",
-		margin : "0px 2px 0px 0px"
+		margin : "0px 2px 0px 0px",
+		backgroundColor: "rgba(255, 255, 255, 0.65)",
+
 	},
 	searchButton : {
 		height  : "100%",
@@ -151,6 +154,18 @@ const style = theme => ({
 	searchIcon : {
 		color : "white",
 		fontSize : "2rem"
+	},
+
+	fixedBg : {
+		height : "100vh",
+		backgroundAttachment: "fixed",
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "cover",
+		backgroundPosition: "center center",
+	},
+	scrollBg : {
+		height : "100vh",
+		backgroundColor : "#abc798",
 	}
 })
 
@@ -290,6 +305,7 @@ class Recipes extends Component {
 		const { classes } = this.props;
 		return(
 			<Grid container className = {classes.root}>
+
 				<Grid item xs = {12}>
 					<NavBar/>
 				</Grid>
@@ -307,26 +323,46 @@ class Recipes extends Component {
 								className = {classes.autocomplete}
 								freeSolo
 								disableClearable
+								label = "Search..."
 								value = {this.state.value}//value selected by the user
 								onChange = {(e, newValue) => this.autocompleteChangeHandler(e, newValue)}
 								inputValue = {this.state.inputValue} //value displayed in textbox
 								onInputChange = {(e, newInputValue) => {this.autocompleteInputChangeHandler(e, newInputValue)}}
 								renderInput={(params) => 
 									<TextField {...params} variant="outlined"
-																				InputProps={{...params.InputProps,
+																				 label = "Search..."
+																				 InputProps={{...params.InputProps,
 																											endAdornment: (
 																												<React.Fragment>
 																													{this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
 																													{params.InputProps.endAdornment}
 																												</React.Fragment>),
 																										}} />} />
-							{/*<IconButton disabled color="primary" className = {classes.searchButton}>*/}
 							<Button variant="contained" disableElevation className = {classes.searchButton} onClick = {this.redirectToSearch}>
 							  <SearchIcon className = {classes.searchIcon}/>
 						  </Button>
-							{/*</IconButton>*/}
 							</Grid>
 						</Grid>
+				</Grid>
+			
+				<Grid item xs = {12} className = {classes.scrollBg}>
+				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id, eleifend magna. Nulla at lectus magna. Etiam sodales arcu at lectus porttitor accumsan.</Typography>																				
+				</Grid>
+
+				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background6})`}}>
+				  <Typography variant = "h1">Fixed Background scrolling 1</Typography>
+				</Grid>
+
+				<Grid item xs = {12} className = {classes.scrollBg}>
+				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id, eleifend magna. Nulla at lectus magna.</Typography>
+				</Grid>
+
+				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background9})`}}>
+			  	<Typography variant = "h1">Fixed Background scrolling 2</Typography>
+				</Grid>
+
+				<Grid item xs = {12} className = {classes.scrollBg}>
+				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id.</Typography>
 				</Grid>
 			</Grid>
 		)
