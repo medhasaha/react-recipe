@@ -76,7 +76,6 @@ const style = theme => ({
 class NavBar extends Component {
 	constructor(props){
 		super(props);
-		console.log("RecipeSearch: ",props)
 		this.state = {
 		}
 	}

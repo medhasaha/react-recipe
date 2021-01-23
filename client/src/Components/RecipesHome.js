@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {recipeAutocompleteAPI} from '../ServiceClass.js'
+import {recipeAutocompleteAPI, randomRecipeAPI} from '../ServiceClass.js'
 import NavBar from './NavBar.js'
+import RecipeHeader from './RecipeHeader.js'
 
 import background1 from '../Assets/Images/background/background1.jpg';
 import background2 from '../Assets/Images/background/background2.jpg';
@@ -11,9 +12,31 @@ import background6 from '../Assets/Images/background/background6.jpg';
 import background7 from '../Assets/Images/background/background7.jpg';
 import background8 from '../Assets/Images/background/background8.jpg';
 import background9 from '../Assets/Images/background/background9.jpg';
+import background10 from '../Assets/Images/background/background10.jpg';
+import background11 from '../Assets/Images/background/background11.jpg';
+
+import meal_type_main_course from '../Assets/Images/img/meal_type_main_course.jpg';
+import meal_type_dessert from '../Assets/Images/img/meal_type_dessert.jpg';
+import meal_type_salad from '../Assets/Images/img/meal_type_salad.jpg';
+import meal_type_breakfast from '../Assets/Images/img/meal_type_breakfast.jpg';
+import meal_type_drink from '../Assets/Images/img/meal_type_drink.jpg';
+
+import cuisine_type_american from '../Assets/Images/img/cuisine_type_american.jpg';
+import cuisine_type_british from '../Assets/Images/img/cuisine_type_british.jpg';
+import cuisine_type_mexican from '../Assets/Images/img/cuisine_type_mexican.jpg';
+import cuisine_type_japanese from '../Assets/Images/img/cuisine_type_japanese.jpg';
+import cuisine_type_indian from '../Assets/Images/img/cuisine_type_indian.jpg';
+
+import diet_type_gluten_free from '../Assets/Images/img/diet_type_gluten_free.jpg';
+import diet_type_keto from '../Assets/Images/img/diet_type_keto.jpg';
+import diet_type_vegetarian from '../Assets/Images/img/diet_type_vegetarian.jpg';
+import diet_type_pescetarian from '../Assets/Images/img/diet_type_pescetarian.jpg';
+import diet_type_lacto_veg from '../Assets/Images/img/diet_type_lacto_veg.jpg';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -21,9 +44,35 @@ import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
+const mealTypes = [
+	{title : "main course", image : meal_type_main_course},
+	{title : "dessert", image : meal_type_dessert},
+	{title : "salad", image : meal_type_salad},
+	{title : "breakfast", image : meal_type_breakfast},
+	{title : "drink", image : meal_type_drink},
+]
 
-const backgroundArray = [background1, background2, background3, background4, background5, background6, background7, background8, background9];
+const cuisineTypes = [
+	{title : "American", image : cuisine_type_american},
+	{title : "British", image : cuisine_type_british},
+	{title : "Mexican", image : cuisine_type_mexican},
+	{title : "Japanese", image : cuisine_type_japanese},
+	{title : "Indian", image : cuisine_type_indian},
+]
+
+const dietTypes = [
+	{title : "Gluten Free", image : diet_type_gluten_free},
+	{title : "Ketogenic", image : diet_type_keto},
+	{title : "Vegetarian", image : diet_type_vegetarian},
+	{title : "Pescetarian", image : diet_type_pescetarian},
+	{title : "Lacto-Vegetarian", image : diet_type_lacto_veg},
+]
+const backgroundArray = [background1, background2, background3, background4, background5, background11, background7, background8, background9];
+
 const sample = [
 	{
 	"id": 133439,
@@ -76,6 +125,7 @@ const sample = [
 	"imageType": "jpeg"
 	}
 	]
+
 const style = theme => ({
 	root : {
 
@@ -85,7 +135,7 @@ const style = theme => ({
 		position: "relative",
 		margin: "0 auto",
 		width: "100%",
-		height: "100vh",
+		height: "120vh",
 	},
 	bgDiv : {
 		width : "100%",
@@ -155,7 +205,6 @@ const style = theme => ({
 		color : "white",
 		fontSize : "2rem"
 	},
-
 	fixedBg : {
 		height : "100vh",
 		backgroundAttachment: "fixed",
@@ -164,30 +213,74 @@ const style = theme => ({
 		backgroundPosition: "center center",
 	},
 	scrollBg : {
-		height : "100vh",
-		backgroundColor : "#abc798",
+		// height : "100vh",
+		backgroundColor : "#f8f9fa",
+		padding : "30px 0px 30px"
+	},
+	recipeImage : {
+		width : "300px",
+		height : "300px",
+		objectFit : "cover",
+		objectPosition : "center center",
+		borderRadius : "50%"
+	},
+	gridAboutRecipe : {
+		alignItems : "center",
+		justifyContent : "center",
+		display : "flex",
+	},
+	gridTextAlign : {
+		textAlign : "center"
+	},
+	gridList : {
+		margin : "0px 0px 30px 0px"
 	}
 })
 
 class RecipesHome extends Component {
 	constructor(props){
 		super(props);
-		console.log(this.props)
+		console.log("RecipeHome :",this.props)
 		this.state = {
 			autocompleteOptions : [],
 			value : "",
 			inputValue : "",
 			loading : false,
 			open : false,
+			randomRecipes : []
 		}
 	}
 
 	componentDidMount(){
-
+		if (this.props.location && this.props.location.state && this.props.location.state.data){
+      this.setState({ 
+				...this.props.location.state.data,
+			});
+    } else {
+			this.getRandomRecipe()
+    }
 	}
 
 	componentWillUnmount() {
 
+	}
+
+	getRandomRecipe = () => {
+		randomRecipeAPI()
+		.then(res => {
+			console.log(res)
+			this.setState({
+				randomRecipes : res.recipes,
+			}, () => {
+				this.props.history.replace(this.props.history.location.pathname,
+					{ data: 
+						{ 
+							randomRecipes : this.state.randomRecipes,
+						}
+					});
+			}
+			)
+		}).catch(err => console.log(err))
 	}
 
 	recipeAutocompleteMethod = (value) => {
@@ -270,9 +363,9 @@ class RecipesHome extends Component {
 					</span>
 				</div>
 				<div style = {{ "animationDelay": "45s" }} className = {classes.bgDiv}>
-					<img src = {background6} className = {classes.bgImage} />
+					<img src = {background11} className = {classes.bgImage} />
 					<span className = {classes.attribution}>
-						Photo by <a href="https://unsplash.com/@1ncreased?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Lidye</a> 
+						Photo by <a href="https://unsplash.com/@society_grace?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Sarah Holcomb</a> 
 						{' '} on <a href="https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" className = {classes.attributionLink}>Unsplash</a>
 					</span>
 				</div>
@@ -301,6 +394,41 @@ class RecipesHome extends Component {
 		)
 	}
 
+	recipeOfTheDay = () => {
+		const { classes } = this.props;
+		return(
+			<React.Fragment>
+				<Grid container style = {{margin : "30px 0px 30px 0px"}}>
+					<Grid item xs = {12} className = {classes.gridTextAlign} style = {{marginBottom : "15px"}}>
+						<Typography variant = "h2">Recipe Of The Day</Typography>
+					</Grid>
+
+					<Grid item xs = {4} className = {classes.gridTextAlign}>
+						<img src = {this.state.randomRecipes[0].image} className = {classes.recipeImage}/>
+					</Grid>
+
+					<Grid item xs = {8} className = {classes.gridAboutRecipe}>
+						<RecipeHeader details = {this.state.randomRecipes[0]}/>
+					</Grid>
+				</Grid>
+		  </React.Fragment>
+		)
+	}
+
+	horizontalList = (list) => {
+		const { classes } = this.props;
+		return(
+			<GridList cellHeight={280} className={classes.gridList} cols = {5}>
+				{list.map((tile) => (
+					<GridListTile key={tile.title}>
+						<img src={`${tile.image}`} alt={tile.title} />
+						<GridListTileBar title={tile.title}/>
+					</GridListTile>
+				))}
+			</GridList>
+		)
+	}
+
   render(){
 		const { classes } = this.props;
 		return(
@@ -323,14 +451,12 @@ class RecipesHome extends Component {
 								className = {classes.autocomplete}
 								freeSolo
 								disableClearable
-								label = "Search..."
 								value = {this.state.value}//value selected by the user
 								onChange = {(e, newValue) => this.autocompleteChangeHandler(e, newValue)}
 								inputValue = {this.state.inputValue} //value displayed in textbox
 								onInputChange = {(e, newInputValue) => {this.autocompleteInputChangeHandler(e, newInputValue)}}
 								renderInput={(params) => 
 									<TextField {...params} variant="outlined"
-																				 label = "Search..."
 																				 InputProps={{...params.InputProps,
 																											endAdornment: (
 																												<React.Fragment>
@@ -346,7 +472,10 @@ class RecipesHome extends Component {
 				</Grid>
 			
 				<Grid item xs = {12} className = {classes.scrollBg}>
-				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id, eleifend magna. Nulla at lectus magna. Etiam sodales arcu at lectus porttitor accumsan.</Typography>																				
+				  <Card style = {{margin : "0px 30px 30px 30px"}}>
+					  {this.state.randomRecipes && this.state.randomRecipes.length > 0 && this.recipeOfTheDay()}
+					</Card>
+					{this.horizontalList(mealTypes)}
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background6})`}}>
@@ -354,15 +483,15 @@ class RecipesHome extends Component {
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.scrollBg}>
-				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id, eleifend magna. Nulla at lectus magna.</Typography>
+				  {this.horizontalList(cuisineTypes)}
 				</Grid>
 
-				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background9})`}}>
+				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background10})`}}>
 			  	<Typography variant = "h1">Fixed Background scrolling 2</Typography>
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.scrollBg}>
-				  <Typography variant = "h3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor tempor, posuere mi id.</Typography>
+				  {this.horizontalList(dietTypes)}
 				</Grid>
 			</Grid>
 		)

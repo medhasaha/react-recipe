@@ -3,6 +3,7 @@ import {recipeDetailsAPI, similarRecipesAPI, recipeEquipmentsAPI} from '../Servi
 import CONFIG from '../Config.js'
 import RecipeCard from './RecipeCard.js'
 import NutiritionChart from './NutritionChart.js'
+import RecipeHeader from './RecipeHeader.js'
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -298,7 +299,8 @@ class RecipeDetails extends Component {
 				</Grid>
 
 				<Grid item xs = {8} className = {classes.gridAboutRecipe}>
-					{this.aboutRecipePanelJSX()}
+					{/*this.aboutRecipePanelJSX()*/}
+					<RecipeHeader details = {this.state.details}/>
 				</Grid>
 
 				<Grid item xs = {6} style = {{marginTop : "40px", "border-right" : "0.1px grey solid"}}>

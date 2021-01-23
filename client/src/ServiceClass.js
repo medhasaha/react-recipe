@@ -24,6 +24,18 @@ export const recipeSearchAPI =(query) =>{
 		.catch(error => {console.log("[ServiceClass] recipeSearchAPI error",error)})
 }
 
+export const randomRecipeAPI =(query) =>{
+	let queryURL = CONFIG.RANDOM_RECIPES + `?number=6&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] randomRecipeAPI error",error)})
+}
+
 export const recipeDetailsAPI =(id) =>{
 	let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/information?includeNutrition=true&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
 		return fetch(queryURL)
@@ -106,5 +118,40 @@ export const attributionArray =  [
 		name: "Abhishek Sanwa Limbu", 
 		url : "https://unsplash.com/@abhishek_sanwa?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"
 	},
+	{
+		background : "background10",
+		name: "Annie Spratt", 
+		url : "https://unsplash.com/@anniespratt?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"
+	},
+	{
+		background : "background11",
+		name: "Sarah Holcomb", 
+		url : "https://unsplash.com/@society_grace?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"
+	},
 
 ]
+
+export const mealTypes_home = [
+	{title : "main course", image : "meal_type_main_course"},
+	{title : "dessert", image : "meal_type_dessert"},
+	{title : "salad", image : "meal_type_salad"},
+	{title : "breakfast", image : "meal_type_breakfast"},
+	{title : "drink", image : "meal_type_drink"},
+]
+
+export const cuisineTypes = [
+	{title : "American", image : "cuisine_type_american"},
+	{title : "British", image : "cuisine_type_british"},
+	{title : "Mexican", image : "cuisine_type_mexican"},
+	{title : "Japanese", image : "cuisine_type_japanese"},
+	{title : "Indian", image : "cuisine_type_indian"},
+]
+
+export const dietTypes = [
+	{title : "Gluten Free", image : "diet_type_gluten_free"},
+	{title : "Ketogenic", image : "diet_type_keto"},
+	{title : "Vegetarian", image : "diet_type_vegetarian"},
+	{title : "Pescetarian", image : "diet_type_pescetarian"},
+	{title : "Lacto-Vegetarian", image : "diet_type_lacto_veg"},
+]
+
