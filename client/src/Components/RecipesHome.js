@@ -169,7 +169,7 @@ const style = theme => ({
 	}
 })
 
-class Recipes extends Component {
+class RecipesHome extends Component {
 	constructor(props){
 		super(props);
 		console.log(this.props)
@@ -369,4 +369,4 @@ class Recipes extends Component {
 	}
 }
 
-export default withStyles(style, {withTheme: true})(Recipes);
+export default withStyles(style, {withTheme: true})(RecipesHome);
