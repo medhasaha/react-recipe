@@ -1,4 +1,5 @@
-const BASE_URL = "https://api.spoonacular.com"
+// const BASE_URL = "https://api.spoonacular.com"
+const BASE_URL = "http://localhost:3001/recipes"
 const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
 let id = 1;
 const IMAGE_URL_RECIPE = " https://spoonacular.com/recipeImages/";
@@ -6,21 +7,32 @@ const IMAGE_URL_PRODUCT = "https://spoonacular.com/productImages/";
 const IMAGE_URL_INGREDIENT = "https://spoonacular.com/cdn/ingredients"
 const IMAGE_URL_EQUIPMENT = "https://spoonacular.com/cdn/equipment"
 
-const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
+// const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
+// const INGREDIENT_SEARCH = BASE_URL + `/recipes/findByIngredients`
+// const RECIPE_DETAILS_URL = BASE_URL + `/recipes`;
+// const SIMILAR_RECIPES_URL = BASE_URL + `/recipes`;
+// const RANDOM_RECIPES = BASE_URL + `/recipes/random`;
+// const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipes/autocomplete`;
+// const RECIPE_TASTE = BASE_URL + `/recipes/${id}/tasteWidget.json`;
+// const RECIPE_NUTRITION = BASE_URL + `/recipes/${id}/nutritionWidget.json`;
+// const RECIPE_INSTRUCTION = BASE_URL + `/recipes/${id}/analyzedInstructions`;
+// const RECIPE_EQUIPMENTS = BASE_URL + `/recipes`;
+
+const RECIPE_SEARCH_URL = BASE_URL + `/getRecipes`;
 const INGREDIENT_SEARCH = BASE_URL + `/recipes/findByIngredients`
-const RECIPE_DETAILS_URL = BASE_URL + `/recipes`;
-const SIMILAR_RECIPES_URL = BASE_URL + `/recipes`;
-const RANDOM_RECIPES = BASE_URL + `/recipes/random`;
-const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipes/autocomplete`;
+const RECIPE_DETAILS_URL = BASE_URL + `/getRecipeDetails`;
+const SIMILAR_RECIPES_URL = BASE_URL + `/getSimilarRecipes`;
+const RANDOM_RECIPES = BASE_URL + `/getRandomRecipes`;
+const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipeAutocomplete`;
 const RECIPE_TASTE = BASE_URL + `/recipes/${id}/tasteWidget.json`;
 const RECIPE_NUTRITION = BASE_URL + `/recipes/${id}/nutritionWidget.json`;
 const RECIPE_INSTRUCTION = BASE_URL + `/recipes/${id}/analyzedInstructions`;
-const RECIPE_EQUIPMENTS = BASE_URL + `/recipes`;
+const RECIPE_EQUIPMENTS = BASE_URL + `/getRecipeEquipments`;
 
 export default {
 	RECIPES_AUTOCOMPLETE,
-  RECIPE_SEARCH_URL,
-  INGREDIENT_SEARCH,
+    RECIPE_SEARCH_URL,
+    INGREDIENT_SEARCH,
 	RECIPE_DETAILS_URL,
 	SIMILAR_RECIPES_URL,
 	RANDOM_RECIPES,

@@ -1,73 +1,79 @@
 import CONFIG from './Config.js'
 					
 export const recipeAutocompleteAPI =(query) =>{
-	let queryURL = CONFIG.RECIPES_AUTOCOMPLETE + `?query=${query}&number=10&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	// let queryURL = CONFIG.RECIPES_AUTOCOMPLETE + `?query=${query}&number=10&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RECIPES_AUTOCOMPLETE + `?query=${query}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] recipeAutocompleteAPI error",error)})
 }
 				
 export const recipeSearchAPI =(query) =>{
-	let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}&number=20&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	// let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}&number=20&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] recipeSearchAPI error",error)})
 }
 
-export const randomRecipeAPI =(query) =>{
-	let queryURL = CONFIG.RANDOM_RECIPES + `?number=6&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+export const randomRecipeAPI =() =>{
+	// let queryURL = CONFIG.RANDOM_RECIPES + `?number=6&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RANDOM_RECIPES
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] randomRecipeAPI error",error)})
 }
 
 export const recipeDetailsAPI =(id) =>{
-	let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/information?includeNutrition=true&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	// let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/information?includeNutrition=true&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RECIPE_DETAILS_URL + `?id=${id}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] recipeDetailsAPI error",error)})
 }
 
 export const similarRecipesAPI =(id) =>{
-	let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/similar?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	// let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/similar?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RECIPE_DETAILS_URL + `?id=${id}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] recipeDetailsAPI error",error)})
 }
 
 export const recipeEquipmentsAPI =(id) =>{
-	let queryURL = CONFIG.RECIPE_EQUIPMENTS + `/${id}/equipmentWidget.json?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	// let queryURL = CONFIG.RECIPE_EQUIPMENTS + `/${id}/equipmentWidget.json?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
+	let queryURL = CONFIG.RECIPE_EQUIPMENTS + `?id=${id}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
 		})
 		.then(data => {
-			return data;
+			return data.results;
 		})
 		.catch(error => {console.log("[ServiceClass] recipeEquipmentsAPI error",error)})
 }

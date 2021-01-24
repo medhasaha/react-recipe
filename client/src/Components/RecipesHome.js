@@ -234,6 +234,25 @@ const style = theme => ({
 	},
 	gridList : {
 		margin : "0px 0px 30px 0px"
+	},
+	veganGrid : {
+		textAlign : "center",
+		marginTop : "auto",
+		marginBottom : "auto",
+		marginLeft : "120px",
+		marginRight : "120px"
+	},
+	veganTitle : {
+		color : "#fff",
+		marginBottom : "30px"
+	},
+	veganSubTitle : {
+		color : "#fff",
+		marginBottom : "120px"
+	},
+	veganButton : {
+		color : "#fff",
+		backgroundColor : "#932432"
 	}
 })
 
@@ -429,6 +448,40 @@ class RecipesHome extends Component {
 		)
 	}
 
+	getWhatsInMyFridgePanel = () => {
+		const { classes } = this.props;
+		return(
+			<Grid container style = {{height : "100%"}}>
+				<Grid item xs = {12} className = {classes.veganGrid}>
+					<Typography variant = "h1" className = {classes.veganTitle}>Whats In My Fridge?</Typography>
+					<Typography variant = "h6" className = {classes.veganSubTitle}>
+					  The best way to reduce food waste and save money? Eat what you’ve already paid for! 
+					  Just add your ingredients and we will instantly finds matching recipes from the
+						most popular cooking websites! Don’t overthink it, we’re going to tell you what to cook.
+					</Typography>
+					<Button variant = "contained" className = {classes.veganButton}>Find Me A Recipe</Button>
+				</Grid>
+			</Grid>
+		)
+	}
+
+	getVeganPanel = () => {
+		const { classes } = this.props;
+		return(
+			<Grid container style = {{height : "100%"}}>
+				<Grid item xs = {12} className = {classes.veganGrid}>
+					<Typography variant = "h1" className = {classes.veganTitle}>Vegan Recipes</Typography>
+					<Typography variant = "h6" className = {classes.veganSubTitle}>
+						Many say that nutritious food come at a price but not any more. <b><i>Vegan food</i></b> can provide
+						a healthy balance of nutrients and can be cost friendly too. So lets veganise your eveyday
+						recipes
+					</Typography>
+					<Button variant = "contained" className = {classes.veganButton}>Find Vegan Recipes</Button>
+				</Grid>
+			</Grid>
+		)
+	}
+
   render(){
 		const { classes } = this.props;
 		return(
@@ -479,7 +532,7 @@ class RecipesHome extends Component {
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background6})`}}>
-				  <Typography variant = "h1">Fixed Background scrolling 1</Typography>
+				  {this.getWhatsInMyFridgePanel()}
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.scrollBg}>
@@ -487,7 +540,7 @@ class RecipesHome extends Component {
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.fixedBg} style = {{backgroundImage : `url(${background10})`}}>
-			  	<Typography variant = "h1">Fixed Background scrolling 2</Typography>
+				  {this.getVeganPanel()}
 				</Grid>
 
 				<Grid item xs = {12} className = {classes.scrollBg}>

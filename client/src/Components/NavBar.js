@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Typography from '@material-ui/core/Typography';
@@ -70,6 +71,9 @@ const style = theme => ({
 		// padding : "0px 0px 0px 20px",
 		margin : "0px 0px 0px 20px",
 		// borderRight : "2px solid white",
+		color : "#932432",
+		border: "1px solid #932432",
+		// backgroundColor : "#932432"
 	}
 })
 
@@ -103,9 +107,9 @@ class NavBar extends Component {
 								inputProps={{ 'aria-label': 'search' }}/>
 						</div>
 						<div>
-							<Typography className = {classes.login} variant="button" noWrap>
-							  login/ Signup
-						  </Typography>
+							<Button className = {classes.login} variant="outlined" noWrap>
+							  Login/ Signup
+						  </Button>
 						</div>
 					</Toolbar>
 				</AppBar>
