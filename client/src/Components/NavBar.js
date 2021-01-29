@@ -19,6 +19,7 @@ const style = theme => ({
 	title: {
 		padding : "0px 20px 0px 0px",
 		margin : "0px 20px 0px 0px",
+		fontFamily : "Oleo Script Swash Caps"
 		// borderRight : "2px solid white",
 	},
 	appBarItems : {
@@ -27,7 +28,7 @@ const style = theme => ({
 	logo : {
 		height : "32px", 
 		width : "32px", 
-		verticalAlign : "top"
+		verticalAlign : "sub"
 	},
 	search: {
 		position: 'relative',
@@ -91,7 +92,7 @@ class NavBar extends Component {
 				<AppBar position="static" className = {classes.appBar}>
 					<Toolbar>
 					  <div>
-							<Typography className={classes.title} variant="h6" noWrap>
+							<Typography className={classes.title} variant="h4" noWrap>
 								Recipe 	<img src = {LogoIcon} className = {classes.logo}/>
 							</Typography>
 						</div>
