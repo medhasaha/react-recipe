@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import {loginAPI} from '../ServiceClass.js';
 
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -39,6 +40,18 @@ const style = theme => ({
 		width : "100%",
 		"& .MuiFormLabel-root": {
 			color: "#fff"
+		},
+		"&:hover .MuiFormLabel-root": {
+			color: "#932432"
+		},
+		"& .MuiInputBase-input" : {
+			color : "#fff",
+		},
+		"&:hover .MuiInputBase-input" : {
+			color : "#932432",
+		},
+		"& .Mui-focused .MuiInputBase-input" : {
+			color : "#932432"
 		},
 		"& .Mui-focused" : {
 			color : "#932432",
@@ -81,21 +94,38 @@ const style = theme => ({
 	},
 })
 
-class LogIn extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-		}
-	}
+const LogIn = (props) => {
+	let [email, setEmail] = useState('');
+	let [password, setPassword] = useState('');
 
-	redirectToSignup = () => {
-		this.props.history.push({
-			pathname: `${this.props.baseURL}/signup`,
+	const redirectToSignup = () => {
+		props.history.push({
+			pathname: `${props.baseURL}/signup`,
 		});
 	}
 
-  render(){
-		const { classes } = this.props;
+	const redirectToDashboard = () => {
+		console.log(email, password)
+		loginAPI(email, password)
+		.then(res => {
+			console.log(res)
+			if(res && res.success){
+				props.history.push({
+					pathname: `${props.baseURL}/dashboard`,
+				});
+			}
+		})
+	}
+
+	const emailChangeHandler = (event) => {
+		setEmail(event.target.value)
+	}
+
+	const passwordChangeHandler = (event) => {
+		setPassword(event.target.value)
+	}
+
+		const { classes, theme } = props;
 		return(
 			<div className = {classes.root}>
 				<Card className = {classes.card}>
@@ -106,15 +136,32 @@ class LogIn extends Component {
 							</Typography>
 						</Grid>
 						<Grid item xs = {12}>
-							<TextField label="Email" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="Email" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 value = {email}
+												 onChange = {(e) => {emailChangeHandler(e)}}/>
 						</Grid>
 						<Grid item xs = {12}>
-							<TextField label="Password" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="Password" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 value = {password}
+												 onChange = {(e) => {passwordChangeHandler(e)}}/>
 						</Grid>
 						<Grid item xs = {12} className = {classes.gridCenter}>
-							<Button variant="contained" className = {classes.button} color = "secondary">Login</Button>
+							<Button variant="contained" 
+											className = {classes.button} 
+											color = "secondary"
+											onClick = {() => redirectToDashboard()}>
+								Login
+							</Button>
 						</Grid>
-						<Grid item xs = {12} className = {classes.signupLink} onClick = {() => {this.redirectToSignup()}}>
+						<Grid item xs = {12} 
+						      className = {classes.signupLink} 
+						      onClick = {() => {redirectToSignup()}}>
 							<Typography variant="caption" color = "secondary" className = {classes.signupText}>
 								Don't have an Account? Signup Now!
 							</Typography>
@@ -123,7 +170,6 @@ class LogIn extends Component {
 				</Card>
 			</div>
 		)
-	}
 }
 
 export default withStyles(style, {withTheme: true})(LogIn);

@@ -12,13 +12,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CheckBox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 
-// import timeIcon from '../Assets/Icons/time.svg'
-// import servingsIcon from '../Assets/Icons/servings.svg'
-// import vegetarianIcon from '../Assets/Icons/vegetarian.svg'
-// import nonVegetarianIcon from '../Assets/Icons/nonVegetarian.svg'
-// import chefIcon from '../Assets/Icons/chef.svg'
-// import equipmentsIcon from '../Assets/Icons/equipments.svg'
-// import instructionsIcon from '../Assets/Icons/instructions.svg'
 import placeholderIcon from '../Assets/Icons/placeholder.svg'
 import vegIcon from '../Assets/Icons/veg.svg'
 import nonVegIcon from '../Assets/Icons/nonVeg.svg'

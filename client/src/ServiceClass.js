@@ -78,6 +78,60 @@ export const recipeEquipmentsAPI =(id) =>{
 		.catch(error => {console.log("[ServiceClass] recipeEquipmentsAPI error",error)})
 }
 
+export const loginAPI =(email, password) =>{
+	let data = {
+		email : email,
+		password : password
+	}
+	let queryURL = CONFIG.LOGIN_URL;
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] loginAPI error",error)})
+}
+
+export const dashboardAPI =() =>{
+	let queryURL = CONFIG.DASHBOARD_URL;
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] dashboardAPI error",error)})
+}
+
+export const signupAPI =(username, email, password) =>{
+	let data = {
+		username : username,
+		email : email,
+		password : password,
+
+	}
+	let queryURL = CONFIG.SIGNUP_URL;
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] signupAPI error",error)})
+}
+
 export const attributionArray =  [
 	{
 		background : "background1",

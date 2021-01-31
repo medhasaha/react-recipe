@@ -1,9 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import {signupAPI} from '../ServiceClass.js';
+
 
 import Typography from '@material-ui/core/Typography';
-import { Card, TextField, Grid, Button } from '@material-ui/core';
+import { Card, TextField, Grid, Button, InputAdornment, IconButton  } from '@material-ui/core';
 import signupBackground from '../Assets/Images/background/signup_background.jpg';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import LogoIcon from '../Assets/Icons/Logo.svg'
 
 const style = theme => ({
@@ -39,6 +43,18 @@ const style = theme => ({
 		width : "100%",
 		"& .MuiFormLabel-root": {
 			color: "#fff"
+		},
+		"&:hover .MuiFormLabel-root": {
+			color: "#932432"
+		},
+		"& .MuiInputBase-input" : {
+			color : "#fff"
+		},
+		"&:hover .MuiInputBase-input" : {
+			color : "#932432",
+		},
+		"& .Mui-focused .MuiInputBase-input" : {
+			color : "#932432"
 		},
 		"& .Mui-focused" : {
 			color : "#932432",
@@ -82,43 +98,136 @@ const style = theme => ({
 	subHeading: {
 		color : "#fff",
 	},
+	iconButton : {
+		color : "rgba(225, 225, 225, 0.50)",
+	}
 })
 
-class SignUp extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-		}
-	}
+const SignUp = (props) => {
+	let [values, setValues] = useState({
+		username : '',
+		email : ''
+	})
+	let [password, setPassword] = useState({
+		value : '',
+		showPassword : false
+	});
+	let [confirmPassword, setConfirmPassword] = useState({
+		value : '',
+		showPassword : false
+	});
 
-	redirectToSignup = () => {
+
+	const redirectToSignup = () => {
 		this.props.history.push({
 			pathname: `${this.props.baseURL}/login`,
 		});
 	}
 
-  render(){
-		const { classes } = this.props;
+	const textFieldChangeHandler = (event, id) =>{
+		setValues({ ...values, [id]: event.target.value });
+	}
+
+	const passwordChangeHandler = (event) => {
+		setPassword({...password, value : event.target.value})
+	}
+
+	const handleClickShowPassword = () => {
+    setPassword({ ...password, showPassword: !password.showPassword });
+  };
+
+	const confirmPasswordChangeHandler = (event) => {
+		setConfirmPassword({...confirmPassword, value : event.target.value})
+	}
+
+	const handleClickShowConfirmPassword = () => {
+    setConfirmPassword({ ...confirmPassword, showPassword: !confirmPassword.showPassword });
+  };
+
+	const signupUser = () => {
+		console.log(values.username, values.email, password.value, confirmPassword.value);
+		if(password.value === confirmPassword.value){
+			signupAPI(values.username, values.email, password.value)
+			.then(res => {
+				if(res && res.success){
+					props.history.push({
+						pathname: `${props.baseURL}/login`,
+					});
+				}
+			}).catch(err => console.log(err))
+		}else{
+			console.log("Incorrect Password");
+		}
+	}
+
+		const { classes } = props;
 		return(
 			<div className = {classes.root}>
 				<Card className = {classes.card}>
 					<Grid container>
 						<Grid item xs = {12}>
-							<TextField label="User Name" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="User Name" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 value = {values.username}
+												 onChange = {(e) => {textFieldChangeHandler(e, 'username')}}/>
 						</Grid>
 						<Grid item xs = {12}>
-							<TextField label="Email" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="Email" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 value = {values.email}
+												 onChange = {(e) => {textFieldChangeHandler(e, 'email')}}/>
 						</Grid>
 						<Grid item xs = {12}>
-						  <TextField label="Password" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="Password" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 type={password.showPassword ? 'text' : 'password'}
+												 value = {password.value}
+												 onChange = {(e) => {passwordChangeHandler(e)}}
+												 InputProps={{
+													endAdornment: 
+														<InputAdornment position="end">
+															<IconButton classes = {{root : classes.iconButton}}
+																onClick={() => handleClickShowPassword()}
+																onMouseDown={(e) => {e.preventDefault()}}>
+																{password.showPassword ? <Visibility /> : <VisibilityOff />}
+															</IconButton>
+														</InputAdornment>,
+												 }}/>
 						</Grid>	
 						<Grid item xs = {12}>
-						  <TextField label="Confirm Password" variant="outlined" color = "secondary" className = {classes.textField}/>
+							<TextField label="Confirm Password" 
+												 variant="outlined" 
+												 color = "secondary" 
+												 className = {classes.textField}
+												 type={confirmPassword.showPassword ? 'text' : 'password'}
+												 value = {confirmPassword.value}
+												 onChange = {(e) => {confirmPasswordChangeHandler(e)}}
+												 InputProps={{
+													endAdornment: 
+														<InputAdornment position="end">
+															<IconButton classes = {{root : classes.iconButton}}
+																onClick={() => handleClickShowConfirmPassword()}
+																onMouseDown={(e) => {e.preventDefault()}}>
+																{confirmPassword.showPassword ? <Visibility /> : <VisibilityOff />}
+															</IconButton>
+														</InputAdornment>,
+												 }}/>
 					  </Grid>
 						<Grid item xs = {12} className = {classes.gridCenter}>
-							<Button variant="contained" className = {classes.button} color = "secondary">Signup</Button>
+							<Button variant="contained" 
+											className = {classes.button} 
+											color = "secondary"
+											onClick = {() => {signupUser()}}>
+								Signup
+							</Button>
 						</Grid>
-						<Grid item xs = {12} className = {classes.signupLink} onClick = {() => {this.redirectToSignup()}}>
+						<Grid item xs = {12} className = {classes.signupLink} onClick = {() => {redirectToSignup()}}>
 							<Typography variant="caption" color = "secondary" className = {classes.signupText}>
 								Already have an Account? Login Now!
 							</Typography>
@@ -134,13 +243,13 @@ class SignUp extends Component {
 					</Grid>
 					<Grid item xs = {12} className = {classes.gridCenter}>
 						<Typography className={classes.subHeading} variant="h4">
-						  Register for a free account to save your favourite recipes to your recipe box !
+						  Register for a free account to save your favourite recipes to your recipe box!
 					  </Typography>
 					</Grid>
 				</Grid>
 			</div>
 		)
 	}
-}
+
 
 export default withStyles(style, {withTheme: true})(SignUp);
