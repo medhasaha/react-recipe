@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {recipeAutocompleteAPI, randomRecipeAPI} from '../ServiceClass.js'
+import {recipeAutocompleteAPI, randomRecipeAPI, userAPI} from '../ServiceClass.js'
 import NavBar from './NavBar.js'
 import RecipeHeader from './RecipeHeader.js'
 
@@ -259,7 +259,7 @@ const style = theme => ({
 class RecipesHome extends Component {
 	constructor(props){
 		super(props);
-		console.log("RecipeHome :",this.props)
+		// console.log("RecipeHome :",this.props)
 		this.state = {
 			autocompleteOptions : [],
 			value : "",
@@ -271,6 +271,7 @@ class RecipesHome extends Component {
 	}
 
 	componentDidMount(){
+		this.getUserDetails();
 		if (this.props.location && this.props.location.state && this.props.location.state.data){
       this.setState({ 
 				...this.props.location.state.data,
@@ -282,6 +283,16 @@ class RecipesHome extends Component {
 
 	componentWillUnmount() {
 
+	}
+
+	getUserDetails = () => {
+		userAPI()
+		.then(res => {
+			console.log(res)
+			this.setState({
+				user : res,
+			})
+		}).catch(err => console.log(err))
 	}
 
 	getRandomRecipe = () => {
@@ -488,7 +499,7 @@ class RecipesHome extends Component {
 			<Grid container className = {classes.root}>
 
 				<Grid item xs = {12}>
-					<NavBar/>
+					<NavBar home = {true}/>
 				</Grid>
 				<Grid item xs = {12} className = {classes.bgGrid}>
 					{this.sliderJSX()}

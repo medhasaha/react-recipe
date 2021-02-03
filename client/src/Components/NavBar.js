@@ -13,8 +13,11 @@ const style = theme => ({
 		flexGrow : "1"
 	},
 	appBar : {
-    color: "#fff",
-    backgroundColor: "#0d1010",
+	color: "#fff",
+	position : "fixed",
+	zIndex : "1400"
+	// backgroundColor: "#0d1010",
+    // backgroundColor: "#932432",
 	},
 	title: {
 		padding : "0px 20px 0px 0px",
@@ -89,7 +92,7 @@ class NavBar extends Component {
 		const { classes } = this.props;
 		return(
 			<div className={classes.root}>
-				<AppBar position="static" className = {classes.appBar}>
+				<AppBar position="static" className = {classes.appBar} style = {{backgroundColor : this.props.home === true ? "#0d1010" : "#932432"}}>
 					<Toolbar>
 					  <div>
 							<Typography className={classes.title} variant="h4" noWrap>

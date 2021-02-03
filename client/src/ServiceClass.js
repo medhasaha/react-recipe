@@ -13,9 +13,10 @@ export const recipeAutocompleteAPI =(query) =>{
 		.catch(error => {console.log("[ServiceClass] recipeAutocompleteAPI error",error)})
 }
 				
-export const recipeSearchAPI =(query) =>{
+export const recipeSearchAPI =(query, number, offset, cuisine = "", diet = "", intolerances = "", meal_type = "", sortParameter = "") =>{
 	// let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}&number=20&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
-	let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}`
+	let queryURL = CONFIG.RECIPE_SEARCH_URL + `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}&type=${meal_type}&sortParameter=${sortParameter}&number=${number}&offset=${offset}`
+	console.log(queryURL)
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
@@ -54,7 +55,7 @@ export const recipeDetailsAPI =(id) =>{
 
 export const similarRecipesAPI =(id) =>{
 	// let queryURL = CONFIG.RECIPE_DETAILS_URL + `/${id}/similar?apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
-	let queryURL = CONFIG.RECIPE_DETAILS_URL + `?id=${id}`
+	let queryURL = CONFIG.SIMILAR_RECIPES_URL + `?id=${id}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
@@ -62,7 +63,7 @@ export const similarRecipesAPI =(id) =>{
 		.then(data => {
 			return data.results;
 		})
-		.catch(error => {console.log("[ServiceClass] recipeDetailsAPI error",error)})
+		.catch(error => {console.log("[ServiceClass] similarRecipesAPI error",error)})
 }
 
 export const recipeEquipmentsAPI =(id) =>{
@@ -130,6 +131,18 @@ export const signupAPI =(username, email, password) =>{
 			return data;
 		})
 		.catch(error => {console.log("[ServiceClass] signupAPI error",error)})
+}
+
+export const userAPI =(username, email, password) =>{
+	let queryURL = CONFIG.USER_URL;
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.result;
+		})
+		.catch(error => {console.log("[ServiceClass] userAPI error",error)})
 }
 
 export const attributionArray =  [
@@ -213,5 +226,78 @@ export const dietTypes = [
 	{title : "Vegetarian", image : "diet_type_vegetarian"},
 	{title : "Pescetarian", image : "diet_type_pescetarian"},
 	{title : "Lacto-Vegetarian", image : "diet_type_lacto_veg"},
+]
+
+export const cuisineList = [
+	"African",
+	"American",
+	"British",
+	"Cajun",
+	"Caribbean",
+	"Chinese",
+	"Eastern European",
+	"European",
+	"French",
+	"German",
+	"Greek",
+	"Indian",
+	"Irish",
+	"Italian",
+	"Japanese",
+	"Jewish",
+	"Korean",
+	"Latin American",
+	"Mediterranean",
+	"Mexican",
+	"Middle Eastern",
+	"Nordic",
+	"Southern",
+	"Spanish",
+	"Thai",
+	"Vietnamese"
+]
+
+export const dietList = [
+	"Gluten Free", 
+	"Ketogenic", 
+	"Vegetarian", 
+	"Lacto-Vegetarian", 
+	"Ovo-Vegetarian",
+	"Vegan", 
+	"Pescetarian", 
+	"Paleo", 
+	"Primal", 
+	"Whole30"
+]
+
+export const intoleranceList = [
+	"Dairy",
+	"Egg",
+	"Gluten",
+	"Grain",
+	"Peanut",
+	"Seafood",
+	"Sesame",
+	"Shellfish",
+	"Soy",
+	"Sulfite",
+	"Tree Nut",
+	"Wheat"
+]
+
+export const mealTypeList = ["main course",
+  "side dish",
+	"dessert",
+	"appetizer",
+	"salad",
+	"bread",
+	"breakfast",
+	"soup",
+	"beverage",
+	"sauce",
+	"marinade",
+	"fingerfood",
+	"snack",
+	"drink"
 ]
 

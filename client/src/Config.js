@@ -8,17 +8,6 @@ const IMAGE_URL_PRODUCT = "https://spoonacular.com/productImages/";
 const IMAGE_URL_INGREDIENT = "https://spoonacular.com/cdn/ingredients"
 const IMAGE_URL_EQUIPMENT = "https://spoonacular.com/cdn/equipment"
 
-// const RECIPE_SEARCH_URL = BASE_URL + `/recipes/complexSearch`;
-// const INGREDIENT_SEARCH = BASE_URL + `/recipes/findByIngredients`
-// const RECIPE_DETAILS_URL = BASE_URL + `/recipes`;
-// const SIMILAR_RECIPES_URL = BASE_URL + `/recipes`;
-// const RANDOM_RECIPES = BASE_URL + `/recipes/random`;
-// const RECIPES_AUTOCOMPLETE = BASE_URL + `/recipes/autocomplete`;
-// const RECIPE_TASTE = BASE_URL + `/recipes/${id}/tasteWidget.json`;
-// const RECIPE_NUTRITION = BASE_URL + `/recipes/${id}/nutritionWidget.json`;
-// const RECIPE_INSTRUCTION = BASE_URL + `/recipes/${id}/analyzedInstructions`;
-// const RECIPE_EQUIPMENTS = BASE_URL + `/recipes`;
-
 const RECIPE_SEARCH_URL = BASE_URL_RECIPE + `/getRecipes`;
 const INGREDIENT_SEARCH = BASE_URL_RECIPE + `/recipes/findByIngredients`
 const RECIPE_DETAILS_URL = BASE_URL_RECIPE + `/getRecipeDetails`;
@@ -30,9 +19,10 @@ const RECIPE_NUTRITION = BASE_URL_RECIPE + `/recipes/${id}/nutritionWidget.json`
 const RECIPE_INSTRUCTION = BASE_URL_RECIPE + `/recipes/${id}/analyzedInstructions`;
 const RECIPE_EQUIPMENTS = BASE_URL_RECIPE + `/getRecipeEquipments`;
 
-const LOGIN_URL = BASE_URL_USER + `/login`;
-const SIGNUP_URL = BASE_URL_USER + `/signup`;
-const DASHBOARD_URL = BASE_URL_USER + `/dashboard`;
+const LOGIN_URL = `/user/login`;
+const SIGNUP_URL = `/user/signup`;
+const DASHBOARD_URL =  `/user/dashboard`;
+const USER_URL =  `/user/user`
 
 export default {
 	RECIPES_AUTOCOMPLETE,
@@ -49,5 +39,6 @@ export default {
 	IMAGE_URL_EQUIPMENT,
 	LOGIN_URL,
 	SIGNUP_URL,
-	DASHBOARD_URL
+	DASHBOARD_URL,
+	USER_URL
 };

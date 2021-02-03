@@ -111,7 +111,7 @@ const LogIn = (props) => {
 			console.log(res)
 			if(res && res.success){
 				props.history.push({
-					pathname: `${props.baseURL}/dashboard`,
+					pathname: `${props.baseURL}/home`,
 				});
 			}
 		})

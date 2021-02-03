@@ -344,6 +344,9 @@ class RecipeDetails extends Component {
 								<RecipeCard id = {item.id} 
 														image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-312x231." + item.imageType}
 														title = {item.title}
+														servings = {item.servings}
+														time = {item.readyInMinutes}
+														boxShadow = {true}
 														redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
 							</Grid>
 						))}

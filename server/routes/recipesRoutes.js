@@ -22,8 +22,16 @@ router.get('/recipeAutocomplete',(req,res) => {
 })
 
 router.get('/getRecipes', (req,res) => {
-	let query = req.query.query
-	let queryURL = BASE_URL + `/complexSearch?query=${query}&number=20&apiKey=${SPOONACULAR_API_KEY}`;
+	let query = req.query.query || ""
+	let cuisine = req.query.cuisine || ""
+	let diet = req.query.diet || ""
+	let intolerances = req.query.intolerances || ""
+	let meal_type = req.query.meal_type || ""
+	let sort = req.query.sortParameter || ""
+	let number = req.query.number || 20
+	let offset = req.query.offset || 0
+
+	let queryURL = BASE_URL + `/complexSearch?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}&type=${meal_type}&sort=${sort}&number=${number}&offset=${offset}&apiKey=${SPOONACULAR_API_KEY}`;
 	return fetch(queryURL)
 	.then(response => {
 		return response.json();

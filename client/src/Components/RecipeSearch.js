@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import {recipeSearchAPI} from '../ServiceClass.js'
-import RecipeCard from './RecipeCard.js'
+import RecipeCard from './RecipeCard.js';
+import CONFIG from '../Config.js';
+import NavBar from './NavBar.js'
+import DrawerJSX from './DrawerJSX'
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Drawer from '@material-ui/core/Drawer';
 
 const sample = {
 	"results": [
@@ -73,16 +77,33 @@ const sample = {
 	"totalResults": 453
 	}
 const style = theme => ({
-
+	root : {
+		backgroundColor: "rgba(255, 255, 255, 0.65)",
+		// backgroundColor: "#0d1010",
+		display : "flex"
+	},
+	drawer : {
+		width : "220px",
+	},
+	drawerPaper : {
+		width : "220px",
+		border : "none",
+		marginTop : "104px",
+		paddingLeft : "20px"
+	}
 })
 
 class RecipeSearch extends Component {
 	constructor(props){
 		super(props);
-		console.log("RecipeSearch: ",props)
+		// console.log("RecipeSearch: ",props)
 		this.state = {
 			results : [],
-			isLoaded : false
+			isLoaded : false,
+			selectedCuisine : "",
+			selectedDiet : "",
+			selectedTolerance : "",
+			selectedMealType : ""
 		}
 	}
 
@@ -92,7 +113,7 @@ class RecipeSearch extends Component {
         results: this.props.location.state.data.results && this.props.location.state.data.results,
         isLoaded: true
       });
-    } else this.recipeSearchMethod(this.props.match.params.query);
+    } else this.searchRecipes();
 		// this.setState({
 		// 	results : sample.results,
 		// 	isLoaded : true
@@ -110,14 +131,13 @@ class RecipeSearch extends Component {
           });
         });
       } else {
-        this.recipeSearchMethod(this.props.match.params.id);
+        this.searchRecipes();
       }
     }
 	}
 
-	recipeSearchMethod = (value) => {
-		console.log(value)
-		recipeSearchAPI(value)
+	searchRecipes = () => {
+		recipeSearchAPI(this.props.match.params.query,20,0)
 		.then(res => {
 			console.log(res)
 			this.setState({
@@ -136,20 +156,48 @@ class RecipeSearch extends Component {
 		});
 	}
 
+	cuisineChangeHandler = (e, newValue) => {
+		this.setState({
+			selectedCuisine : newValue,
+		})
+	}
+
   render(){
 		const { classes } = this.props;
 		return(
-			this.state.isLoaded && this.state.results.length > 0 &&
-			  <Grid container className = {classes.root} spacing = {2}>
-					{this.state.results.map(item => (
-						<Grid item xs = {2}>
-							<RecipeCard id = {item.id} 
-													image = {item.image}
-													title = {item.title} 
-							            redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
-						</Grid>
-					))}
-			  </Grid>
+			<React.Fragment>
+			  <Grid container className = {classes.root}>
+
+					<Grid item xs = {12}>
+						<NavBar/>
+					</Grid>
+
+				  <Grid item xs = {12} style = {{margin : "104px 40px 0px 260px"}}>
+					{this.state.isLoaded && this.state.results.length > 0 &&
+						<Grid container className = {classes.root} spacing = {4}>
+							{this.state.results.map(item => (
+								<Grid item xs = {3}>
+									<RecipeCard id = {item.id} 
+															image = {item.image}
+															// image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-480x360.jpg"}
+															title = {item.title} 
+															// servings = {item.servings}
+															// time = {item.readyInMinutes}
+															boxShadow = {false}
+															redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
+								</Grid>
+							))}
+						</Grid>}
+					</Grid>
+
+					<Drawer className={classes.drawer} variant="persistent" open = {true} classes={{ paper: classes.drawerPaper,}}>
+						<div className={classes.drawerContainer}>
+							<DrawerJSX cuisineChangeHandler = {this.cuisineChangeHandler}/>
+						</div>
+					</Drawer>
+
+				</Grid>
+			</React.Fragment>
 		)
 	}
 }

@@ -12,18 +12,23 @@ import BookmarkFilledIcon from '@material-ui/icons/Bookmark';
 
 const style = theme => ({
 	card : {
-		height : "300px",
-		width : "200px",
+		// height : "350px",
+		width : "100%",
 		position: "relative",
+		borderRadius : "4px",
+		backgroundColor: "#fff",
+		boxShadow : "none"
 	},
 	image : {
 		width : "100%",
-		height : "75%",
+		height : "180px",
 		objectFit : "cover",
 		objectPosition : "center center",
+		borderBottom : "6px solid #932432"
 	},
 	title : {
-		margin : "10px",
+		margin : "10px 0px 10px 0px",
+		// marginBottom : "10px",
 		lineHeight: "1.3rem !important",
 		textOverflow: "ellipsis",
 		overflow: "hidden",
@@ -32,6 +37,16 @@ const style = theme => ({
 		maxHeight: "3rem",
 		display: "-webkit-box",
 		cursor : "pointer",
+		fontFamily : "Fira Sans",
+		textTransform : "capitalize",
+		color : "#932432",
+		fontSize : "21px"
+	},
+	secondaryText : {
+		fontFamily : "Fira Sans",
+		cursor : "pointer",
+		display : "inline",
+		fontSize : "17px"
 	},
 	bookmarkIcon : {
 		position: "absolute",
@@ -68,16 +83,26 @@ class RecipeCard extends Component {
   render(){
 		const { classes } = this.props;
 		return(
-	    <Card className = {classes.card}>
+	    <Card className = {classes.card} style = {{boxShadow : this.props.boxShadow ? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)" : "none"}}>
 				<img className={classes.image} src = {this.props.image}/>
-				<Tooltip title = {this.props.title}>
-					<Typography variant = "h6" className = {classes.title} 
-					            onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
-						{this.props.title}
-					</Typography>
-				</Tooltip>
+				<Grid container style = {{margin : "10px", width : "auto"}}>
+					<Grid item xs = {12} style = {{textAlign : "center"}}>
+						<Tooltip title = {this.props.title}>
+							<Typography variant = "h6" className = {classes.title} 
+													onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
+								{this.props.title}
+							</Typography>
+						</Tooltip>
+					</Grid>
+					{/*<Grid item xs style = {{textAlign : "center"}}>
+						<Typography className = {classes.secondaryText}>{this.props.servings + " Servings / " + this.props.time + " Min"}</Typography>
+					</Grid>
+					<Grid item xs>
+						<Typography className = {classes.secondaryText} style = {{float : "right"}}>{this.props.time + " Min"}</Typography>
+					</Grid>*/}
+				</Grid>
 				<BookmarkEmptyIcon className = {classes.bookmarkIcon}
-				                   onClick = {this.bookmarkClickHandler} 
+													 onClick = {this.bookmarkClickHandler} 
 				                   style = {{display : this.state.isBookmarked ? "none" : "block"}}/>
 				<BookmarkFilledIcon className = {classes.bookmarkIcon} 
 														onClick = {this.bookmarkClickHandler} 
