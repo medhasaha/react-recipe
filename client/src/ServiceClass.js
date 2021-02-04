@@ -285,7 +285,8 @@ export const intoleranceList = [
 	"Wheat"
 ]
 
-export const mealTypeList = ["main course",
+export const mealTypeList = [
+	"main course",
   "side dish",
 	"dessert",
 	"appetizer",

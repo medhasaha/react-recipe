@@ -89,7 +89,20 @@ const style = theme => ({
 		width : "220px",
 		border : "none",
 		marginTop : "104px",
-		paddingLeft : "20px"
+		paddingLeft : "20px",
+		"&::-webkit-scrollbar" : {
+			width: "0.3em",
+		},
+		"&::-webkit-scrollbar-track" : {
+			boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.3)",
+		},
+		"&::-webkit-scrollbar-thumb" : {
+			backgroundColor: "darkgrey",
+			outline: "1px solid slategrey",
+		}
+	},
+	drawerContainer : {
+
 	}
 })
 
@@ -172,11 +185,11 @@ class RecipeSearch extends Component {
 						<NavBar/>
 					</Grid>
 
-				  <Grid item xs = {12} style = {{margin : "104px 40px 0px 260px"}}>
+				  <Grid item xs = {12} style = {{margin : "104px 60px 0px 300px"}}>
 					{this.state.isLoaded && this.state.results.length > 0 &&
 						<Grid container className = {classes.root} spacing = {4}>
 							{this.state.results.map(item => (
-								<Grid item xs = {3}>
+								<Grid item xs = {4}>
 									<RecipeCard id = {item.id} 
 															image = {item.image}
 															// image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-480x360.jpg"}

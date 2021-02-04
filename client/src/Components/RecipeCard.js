@@ -12,7 +12,7 @@ import BookmarkFilledIcon from '@material-ui/icons/Bookmark';
 
 const style = theme => ({
 	card : {
-		// height : "350px",
+		height : "300px",
 		width : "100%",
 		position: "relative",
 		borderRadius : "4px",
@@ -21,10 +21,10 @@ const style = theme => ({
 	},
 	image : {
 		width : "100%",
-		height : "180px",
+		height : "260px",
 		objectFit : "cover",
 		objectPosition : "center center",
-		borderBottom : "6px solid #932432"
+		// borderBottom : "6px solid #932432"
 	},
 	title : {
 		margin : "10px 0px 10px 0px",
@@ -32,15 +32,16 @@ const style = theme => ({
 		lineHeight: "1.3rem !important",
 		textOverflow: "ellipsis",
 		overflow: "hidden",
-		"-webkit-line-clamp": 2,
+		"-webkit-line-clamp": 1,
 		"-webkit-box-orient": "vertical",
-		maxHeight: "3rem",
+		maxHeight: "1.5rem",
 		display: "-webkit-box",
 		cursor : "pointer",
 		fontFamily : "Fira Sans",
 		textTransform : "capitalize",
-		color : "#932432",
-		fontSize : "21px"
+		// color : "#932432",
+		color : "#fff",
+		fontSize : "15px"
 	},
 	secondaryText : {
 		fontFamily : "Fira Sans",
@@ -83,17 +84,29 @@ class RecipeCard extends Component {
   render(){
 		const { classes } = this.props;
 		return(
-	    <Card className = {classes.card} style = {{boxShadow : this.props.boxShadow ? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)" : "none"}}>
+			<Card className = {classes.card} 
+						style = {{boxShadow : this.props.boxShadow 
+																	? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)" 
+																	: "none",
+											position : "relative"}}>
 				<img className={classes.image} src = {this.props.image}/>
 				<Grid container style = {{margin : "10px", width : "auto"}}>
-					<Grid item xs = {12} style = {{textAlign : "center"}}>
+					{/*<Grid item xs = {12} style = {{textAlign : "center"}}>
 						<Tooltip title = {this.props.title}>
 							<Typography variant = "h6" className = {classes.title} 
 													onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
 								{this.props.title}
 							</Typography>
 						</Tooltip>
-					</Grid>
+		      </Grid>*/}
+
+					<div style = {{position : "absolute", left : 0, bottom : 0, maxWidth : "220px",
+					               padding : "0px 10px 0px 10px", backgroundColor : "#932432"}}>
+					  <Typography variant = "h6" className = {classes.title} 
+											onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
+						  {this.props.title}
+						</Typography>
+					</div>
 					{/*<Grid item xs style = {{textAlign : "center"}}>
 						<Typography className = {classes.secondaryText}>{this.props.servings + " Servings / " + this.props.time + " Min"}</Typography>
 					</Grid>
