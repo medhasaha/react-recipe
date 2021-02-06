@@ -47,6 +47,7 @@ import { Typography } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import Divider from '@material-ui/core/Divider';
 
 const mealTypes = [
 	{title : "main course", image : meal_type_main_course},
@@ -246,22 +247,49 @@ const style = theme => ({
 		padding : "30px 0px 30px"
 	},
 	recipeImage : {
-		width : "300px",
-		height : "300px",
+		width : "100%",
+		height : "200px",
 		objectFit : "cover",
 		objectPosition : "center center",
-		borderRadius : "50%"
+		// borderRadius : "50%"
+	},
+	recipeTitle : {
+		fontFamily : "Fira Sans",
+    textTransform : "uppercase",
+    width : "60%",
+    textAlign : "center",
+		fontSize : "20px",
+		fontWeight : "bold"
+	},
+	recipeDivider : {
+		width : "20%",
+		backgroundColor : "#932432",
+		height : "4px",
+		marginTop : "10px"
 	},
 	gridAboutRecipe : {
-		alignItems : "center",
-		justifyContent : "center",
-		display : "flex",
+		height : "200px",
+		outline: "2px solid #ddd",
+    outlineOffset: "-20px",
+	},
+	gridTop : {
+		display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
+	},
+	gridBottom : {
+  	display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
 	},
 	gridTextAlign : {
 		textAlign : "center"
 	},
 	gridList : {
 		margin : "0px 0px 30px 0px"
+	},
+	gridListTileBar : {
+		textTransform : "capitalize"
 	},
 	veganGrid : {
 		textAlign : "center",
@@ -281,6 +309,9 @@ const style = theme => ({
 	veganButton : {
 		color : "#fff",
 		backgroundColor : "#932432"
+	},
+	cursor : {
+		cursor : "pointer"
 	}
 })
 
@@ -375,10 +406,16 @@ class RecipesHome extends Component {
 		)
 	}
 
-	redirectToSearch = () => {
+	redirectToSearch = (query = "", cuisine = "", diet = "", mealType = "") => {
 		this.props.history.push({
 			pathname: `${this.props.baseURL}/search-results`,
-			search: `?query=${this.state.inputValue}&cuisine=&diet=&intolerances=&mealType=&sortParameter=&number=20&offset=0`,
+			search: `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=&mealType=${mealType}&sortParameter=&number=20&offset=0`,
+		});
+	}
+
+	redirectToDetails = (id) => {
+		this.props.history.push({
+			pathname: `${this.props.baseURL}/details/${id}`,
 		});
 	}
 
@@ -457,18 +494,68 @@ class RecipesHome extends Component {
 		const { classes } = this.props;
 		return(
 			<React.Fragment>
-				<Grid container style = {{margin : "30px 0px 30px 0px"}}>
-					<Grid item xs = {12} className = {classes.gridTextAlign} style = {{marginBottom : "15px"}}>
-						<Typography variant = "h2">Recipe Of The Day</Typography>
+				<Grid container>
+
+					<Grid container item xs = {3} className = {classes.cursor}
+					      onClick = {() => {this.redirectToDetails(this.state.randomRecipes[0].id)}}>
+						<Grid item xs = {12}>
+						  <img src = {this.state.randomRecipes[0].image} className = {classes.recipeImage}/>						
+						</Grid>
+						<Grid container item xs = {12} className = {classes.gridAboutRecipe}>
+						  <Grid item xs = {12} className = {classes.gridTop}>
+						    <Typography className = {classes.recipeTitle}>{this.state.randomRecipes[0].title}</Typography>
+							</Grid>
+							<Grid item xs = {12} className = {classes.gridBottom}>
+							  <Divider className = {classes.recipeDivider}/>
+							</Grid>
+						</Grid>
 					</Grid>
 
-					<Grid item xs = {4} className = {classes.gridTextAlign}>
-						<img src = {this.state.randomRecipes[0].image} className = {classes.recipeImage}/>
+					<Grid container item xs = {3} className = {classes.cursor}
+					      onClick = {() => {this.redirectToDetails(this.state.randomRecipes[1].id)}}>
+					  <Grid container item xs = {12}  className = {classes.gridAboutRecipe}>
+							<Grid item xs = {12} className = {classes.gridTop}>
+								<Typography className = {classes.recipeTitle}>{this.state.randomRecipes[1].title}</Typography>
+							</Grid>
+							<Grid item xs = {12} className = {classes.gridBottom}>
+							  <Divider className = {classes.recipeDivider}/>
+							</Grid>
+						</Grid>
+						<Grid item xs = {12}>
+						  <img src = {this.state.randomRecipes[1].image} className = {classes.recipeImage}/>
+						</Grid>
 					</Grid>
 
-					<Grid item xs = {8} className = {classes.gridAboutRecipe}>
-						<RecipeHeader details = {this.state.randomRecipes[0]}/>
+					<Grid container item xs = {3} className = {classes.cursor}
+					      onClick = {() => {this.redirectToDetails(this.state.randomRecipes[2].id)}}>
+					  <Grid item xs = {12}>
+						  <img src = {this.state.randomRecipes[2].image} className = {classes.recipeImage}/>
+						</Grid>
+						<Grid container item xs = {12}  className = {classes.gridAboutRecipe}>
+						  <Grid item xs = {12} className = {classes.gridTop}>
+						    <Typography className = {classes.recipeTitle}>{this.state.randomRecipes[2].title}</Typography>
+							</Grid>
+							<Grid item xs = {12} className = {classes.gridBottom}>
+							  <Divider className = {classes.recipeDivider}/>
+							</Grid>
+						</Grid>
 					</Grid>
+
+					<Grid container item xs = {3} className = {classes.cursor}
+					      onClick = {() => {this.redirectToDetails(this.state.randomRecipes[3].id)}}>
+					  <Grid container item xs = {12}  className = {classes.gridAboutRecipe}>
+						  <Grid item xs = {12} className = {classes.gridTop}>
+						    <Typography className = {classes.recipeTitle}>{this.state.randomRecipes[3].title}</Typography>
+							</Grid>
+							<Grid item xs = {12} className = {classes.gridBottom}>
+							  <Divider className = {classes.recipeDivider}/>
+							</Grid>
+						</Grid>
+						<Grid item xs = {12}>
+						  <img src = {this.state.randomRecipes[3].image} className = {classes.recipeImage}/>
+						</Grid>
+					</Grid>
+
 				</Grid>
 		  </React.Fragment>
 		)
@@ -479,9 +566,10 @@ class RecipesHome extends Component {
 		return(
 			<GridList cellHeight={280} className={classes.gridList} cols = {5}>
 				{list.map((tile) => (
-					<GridListTile key={tile.title}>
+					<GridListTile key={tile.title} className = {classes.cursor}
+					              onClick = {() => {this.redirectToSearch("", list === cuisineTypes ? tile.title : "", list === dietTypes ? tile.title : "", list === mealTypes ? tile.title : "")}}>
 						<img src={`${tile.image}`} alt={tile.title} />
-						<GridListTileBar title={tile.title}/>
+						<GridListTileBar title={tile.title} className = {classes.gridListTileBar}/>
 					</GridListTile>
 				))}
 			</GridList>
@@ -558,7 +646,10 @@ class RecipesHome extends Component {
 																													{params.InputProps.endAdornment}
 																												</React.Fragment>),
 																										}} />} />
-							<Button variant="contained" disableElevation className = {classes.searchButton} onClick = {this.redirectToSearch}>
+							<Button variant="contained" 
+							        disableElevation 
+											className = {classes.searchButton} 
+											onClick = {() => {this.redirectToSearch(this.state.inputValue, "", "", "")}}>
 							  <SearchIcon className = {classes.searchIcon}/>
 						  </Button>
 							</Grid>
@@ -566,7 +657,7 @@ class RecipesHome extends Component {
 				</Grid>
 			
 				<Grid item xs = {12} className = {classes.scrollBg}>
-				  <Card style = {{margin : "0px 30px 30px 30px"}}>
+				  <Card style = {{margin : "0px 20px 30px 20px"}}>
 					  {this.state.randomRecipes && this.state.randomRecipes.length > 0 && this.recipeOfTheDay()}
 					</Card>
 					{this.horizontalList(mealTypes)}
