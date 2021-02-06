@@ -12,22 +12,31 @@ import BookmarkFilledIcon from '@material-ui/icons/Bookmark';
 
 const style = theme => ({
 	card : {
-		height : "300px",
+		height : "215px",
 		width : "100%",
 		position: "relative",
 		borderRadius : "4px",
-		backgroundColor: "#fff",
+		backgroundColor: "transparent",
 		boxShadow : "none"
 	},
 	image : {
 		width : "100%",
-		height : "260px",
+		height : "180px",
 		objectFit : "cover",
 		objectPosition : "center center",
-		// borderBottom : "6px solid #932432"
+		borderBottom : "6px solid #932432"
+	},
+	titleDiv : {
+		position : "absolute", 
+		left : 0, 
+		bottom : 0, 
+		maxWidth : "160px",
+		padding : "0px 10px 0px 10px", 
+		backgroundColor : "#932432",
+		borderRadius : "0px"
 	},
 	title : {
-		margin : "10px 0px 10px 0px",
+		margin : "5px 0px 5px 0px",
 		// marginBottom : "10px",
 		lineHeight: "1.3rem !important",
 		textOverflow: "ellipsis",
@@ -91,17 +100,7 @@ class RecipeCard extends Component {
 											position : "relative"}}>
 				<img className={classes.image} src = {this.props.image}/>
 				<Grid container style = {{margin : "10px", width : "auto"}}>
-					{/*<Grid item xs = {12} style = {{textAlign : "center"}}>
-						<Tooltip title = {this.props.title}>
-							<Typography variant = "h6" className = {classes.title} 
-													onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
-								{this.props.title}
-							</Typography>
-						</Tooltip>
-		      </Grid>*/}
-
-					<div style = {{position : "absolute", left : 0, bottom : 0, maxWidth : "220px",
-					               padding : "0px 10px 0px 10px", backgroundColor : "#932432"}}>
+					<div className = {classes.titleDiv}>
 					  <Typography variant = "h6" className = {classes.title} 
 											onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
 						  {this.props.title}

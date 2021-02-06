@@ -194,7 +194,35 @@ const style = theme => ({
 		display : "inline-flex",
 		margin : "0px 2px 0px 0px",
 		backgroundColor: "rgba(255, 255, 255, 0.65)",
-
+	},
+	textField : {
+		"& .MuiFormLabel-root": {
+			color: "#000"//
+		},
+		"&:hover .MuiFormLabel-root": {
+			color: "#000"
+		},
+		"& .MuiInputBase-input" : {
+			color : "#000",//
+		},
+		"&:hover .MuiInputBase-input" : {
+			color : "#000",
+		},
+		"& .Mui-focused .MuiInputBase-input" : {
+			color : "#000"
+		},
+		"& .Mui-focused" : {
+			color : "#000",
+		},
+		"& .MuiOutlinedInput-notchedOutline" : {
+			border : "3px solid #fff"//
+		},
+		"&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      border : "3px solid #fff"
+    },
+		"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      border : "3px solid #fff"
+    },
 	},
 	searchButton : {
 		height  : "100%",
@@ -349,7 +377,8 @@ class RecipesHome extends Component {
 
 	redirectToSearch = () => {
 		this.props.history.push({
-			pathname: `${this.props.baseURL}/search-results/${this.state.inputValue}`,
+			pathname: `${this.props.baseURL}/search-results`,
+			search: `?query=${this.state.inputValue}&cuisine=&diet=&intolerances=&mealType=&sortParameter=&number=20&offset=0`,
 		});
 	}
 
@@ -521,6 +550,7 @@ class RecipesHome extends Component {
 								onInputChange = {(e, newInputValue) => {this.autocompleteInputChangeHandler(e, newInputValue)}}
 								renderInput={(params) => 
 									<TextField {...params} variant="outlined"
+																				 className = {classes.textField}
 																				 InputProps={{...params.InputProps,
 																											endAdornment: (
 																												<React.Fragment>

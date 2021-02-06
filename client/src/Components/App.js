@@ -17,7 +17,7 @@ const App = () => {
             <Redirect to="/recipe/home" />
           </Route>*/}
           <Route path="/recipe/home" render={(props) => <RecipesHome {...props} baseURL={"/recipe"} />} />
-          <Route path="/recipe/search-results/:query" render={(props) => <RecipeSearch {...props} baseURL={"/recipe"} />} />
+          <Route path="/recipe/search-results" render={(props) => <RecipeSearch {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/details/:id" render={(props) => <RecipeDetails {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/login" render={(props) => <LogIn {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/signup" render={(props) => <SignUp {...props} baseURL={"/recipe"} />} />

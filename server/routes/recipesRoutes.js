@@ -2,7 +2,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 const router = express.Router();
 
-const SPOONACULAR_API_KEY = "88d6bd105d8a4761a1bc59956a91bbad";
+const SPOONACULAR_API_KEY = "8d6fde0e4d744979a6e7407da45536c0";
 const BASE_URL = "https://api.spoonacular.com/recipes"
 
 router.get('/recipeAutocomplete',(req,res) => {
@@ -26,12 +26,12 @@ router.get('/getRecipes', (req,res) => {
 	let cuisine = req.query.cuisine || ""
 	let diet = req.query.diet || ""
 	let intolerances = req.query.intolerances || ""
-	let meal_type = req.query.meal_type || ""
-	let sort = req.query.sortParameter || ""
+	let mealType = req.query.mealType || ""
+	let sortParameter = req.query.sortParameter || ""
 	let number = req.query.number || 20
 	let offset = req.query.offset || 0
 
-	let queryURL = BASE_URL + `/complexSearch?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}&type=${meal_type}&sort=${sort}&number=${number}&offset=${offset}&apiKey=${SPOONACULAR_API_KEY}`;
+	let queryURL = BASE_URL + `/complexSearch?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=${intolerances}&type=${mealType}&sort=${sortParameter}&number=${number}&offset=${offset}&apiKey=${SPOONACULAR_API_KEY}`;
 	return fetch(queryURL)
 	.then(response => {
 		return response.json();

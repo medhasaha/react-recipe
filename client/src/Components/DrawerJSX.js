@@ -4,6 +4,7 @@ import {cuisineList, dietList, intoleranceList, mealTypeList} from '../ServiceCl
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Button, Typography, List, ListItem, ListItemText, ListItemIcon, Collapse, Divider, Checkbox } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
@@ -11,12 +12,20 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 const style = theme => ({
 	text : {
 		fontFamily : "Fira Sans",
-		fontSize : "17px"
+		fontSize : "17px",
+		// color : "#fff"
 	},
 	textSmall : {
 		fontFamily : "Fira Sans",
 		fontSize : "14px",
 		textTransform : "capitalize",
+		// color : "#fff"
+	},
+	divider : {
+		// backgroundColor : "#fff"
+	},
+	icon : {
+		// fill : "#fff",
 	},
 	list : {
 		padding : "0px"
@@ -29,14 +38,15 @@ const style = theme => ({
 		minWidth : "40px"
 	},
 	checkBox : {
-		padding : "4px"
+		padding : "4px",
+		// color : "#fff"
 	},
 	button : {
 		marginTop : "20px",
 		marginBottom : "114px",
 		marginRight : "5px",
 		width : "-webkit-fill-available",
-		color : "#fff",
+		// color : "#fff",
 		border: "1px solid #932432",
 	}
 
@@ -48,10 +58,10 @@ const DrawerJSX = (props) => {
 	const [intolerance, setIntolerance] = useState(false)
 	const [mealType, setMealType] = useState(false)
 
-	const [selectedCuisine, setSelectedCuisine] = useState([])
-	const [selectedDiet, setSelectedDiet] = useState([])
-	const [selectedIntolerance, setSelectedIntolerance] = useState([])
-	const [selectedMealType, setSelectedMealType] = useState([])
+	const [selectedCuisine, setSelectedCuisine] = useState(props.selectedCuisine)
+	const [selectedDiet, setSelectedDiet] = useState(props.selectedDiet)
+	const [selectedIntolerance, setSelectedIntolerance] = useState(props.selectedTolerance)
+	const [selectedMealType, setSelectedMealType] = useState(props.selectedMealType)
 
 	const cuisineCollapseHandler = () =>{
 		setCuisine(current => !current)
@@ -82,45 +92,63 @@ const DrawerJSX = (props) => {
 	}
 
 	const cuisineSelectHandler = (selectedIndex) => {
-		const values = selectedCuisine.some( index => index === selectedIndex)
-									 ? selectedCuisine.filter( i => i !== selectedIndex)
-									 : selectedCuisine.concat([selectedIndex]);	
+		const values = selectedCuisine.some( item => item === cuisineList[selectedIndex])
+									 ? selectedCuisine.filter( item => item !== cuisineList[selectedIndex])
+									 : selectedCuisine.concat([cuisineList[selectedIndex]]);	
 		setSelectedCuisine(values)
 	}
 
 	const dietSelectHandler = (selectedIndex) => {
-		const values = selectedDiet.some( index => index === selectedIndex)
-									 ? selectedDiet.filter( i => i !== selectedIndex)
-									 : selectedDiet.concat([selectedIndex]);	
+		const values = selectedDiet.some( item => item === dietList[selectedIndex])
+									 ? selectedDiet.filter( item => item !== dietList[selectedIndex])
+									 : selectedDiet.concat([dietList[selectedIndex]]);	
 		setSelectedDiet(values)
 	}
 
 	const intoleranceSelectHandler = (selectedIndex) => {
-		const values = selectedIntolerance.some( index => index === selectedIndex)
-									 ? selectedIntolerance.filter( i => i !== selectedIndex)
-									 : selectedIntolerance.concat([selectedIndex]);	
+		const values = selectedIntolerance.some( item => item === intoleranceList[selectedIndex])
+									 ? selectedIntolerance.filter( item => item !== intoleranceList[selectedIndex])
+									 : selectedIntolerance.concat([intoleranceList[selectedIndex]]);	
 		setSelectedIntolerance(values)
 	}
 
 	const mealTypeSelectHandler = (selectedIndex) => {
-		const values = selectedMealType.some( index => index === selectedIndex)
-									 ? selectedMealType.filter( i => i !== selectedIndex)
-									 : selectedMealType.concat([selectedIndex]);	
+		const values = selectedMealType.some( item => item === mealTypeList[selectedIndex])
+									 ? selectedMealType.filter( item => item !== mealTypeList[selectedIndex])
+									 : selectedMealType.concat([mealTypeList[selectedIndex]]);	
 		setSelectedMealType(values)
 	}
 
 	const applyFilters = () => {
-		console.log(selectedCuisine, selectedDiet, selectedMealType, selectedIntolerance)
+		return ({
+			selectedCuisine,
+			selectedDiet,
+			selectedIntolerance,
+			selectedMealType,
+		})
 	}
 
 	const { classes } = props;
 	return(
 		<React.Fragment>
 
+			{props.selectedCuisine.length > 0 && props.selectedCuisine.map(item => (
+				item !== "" && <Chip label = {item} variant = "outlined" />
+			))}
+			{props.selectedDiet.length > 0 && props.selectedDiet.map(item => (
+				item !== "" && <Chip label = {item} variant = "outlined" />
+			))}
+			{props.selectedTolerance.length > 0 && props.selectedTolerance.map(item => (
+				item !== "" && <Chip label = {item} variant = "outlined" />
+			))}
+			{props.selectedMealType.length > 0 && props.selectedMealType.map(item => (
+				item !== "" && <Chip label = {item} variant = "outlined" />
+			))}
+
 			<List className = {classes.list}>
 				<ListItem button onClick = {() => cuisineCollapseHandler()}>
 					<ListItemText primary="Cuisine" classes = {{primary : classes.text}}/>
-					{cuisine ? <ExpandLess /> : <ExpandMore />}
+					{cuisine ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
 				</ListItem>
 				<Collapse in={cuisine} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
@@ -130,7 +158,7 @@ const DrawerJSX = (props) => {
 												onClick = {() => {cuisineSelectHandler(index)}}>
 								<ListItemIcon className = {classes.listItemIcon}>
 									<Checkbox
-										checked={selectedCuisine.some( i => i === index)}
+										checked={selectedCuisine.some( i => i === item)}
 										tabIndex={-1}
 										className = {classes.checkBox}
 										disableRipple/>
@@ -142,12 +170,12 @@ const DrawerJSX = (props) => {
 				</Collapse>
 			</List>
 
-			<Divider width = "100%"/>
+			<Divider width = "100%" className = {classes.divider}/>
 
 			<List className = {classes.list}>
 				<ListItem button onClick = {() => dietCollapseHandler()}>
 					<ListItemText primary="Diet" classes = {{primary : classes.text}}/>
-					{diet ? <ExpandLess /> : <ExpandMore />}
+					{diet ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
 				</ListItem>
 				<Collapse in={diet} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
@@ -157,7 +185,7 @@ const DrawerJSX = (props) => {
 												onClick = {() => {dietSelectHandler(index)}}>
 								<ListItemIcon className = {classes.listItemIcon}>
 									<Checkbox
-										checked={selectedDiet.some( i => i === index)}
+										checked={selectedDiet.some( i => i === item)}
 										tabIndex={-1}
 										className = {classes.checkBox}
 										disableRipple/>
@@ -169,12 +197,12 @@ const DrawerJSX = (props) => {
 				</Collapse>
 			</List>
 
-			<Divider width = "100%"/>
+			<Divider width = "100%" className = {classes.divider}/>
 
 			<List className = {classes.list}>
 				<ListItem button onClick = {() => intoleranceCollapseHandler()}>
 					<ListItemText primary="Intolerance" classes = {{primary : classes.text}}/>
-				  {intolerance ? <ExpandLess /> : <ExpandMore />}
+				  {intolerance ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
 				</ListItem>
 				<Collapse in={intolerance} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
@@ -184,7 +212,7 @@ const DrawerJSX = (props) => {
 												onClick = {() => {intoleranceSelectHandler(index)}}>
 								<ListItemIcon className = {classes.listItemIcon}>
 									<Checkbox
-										checked={selectedIntolerance.some( i => i === index)}
+										checked={selectedIntolerance.some( i => i === item)}
 										tabIndex={-1}
 										className = {classes.checkBox}
 										disableRipple/>
@@ -196,12 +224,12 @@ const DrawerJSX = (props) => {
 				</Collapse>
 			</List>
 
-			<Divider width = "100%"/>
+			<Divider width = "100%" className = {classes.divider}/>
 
 			<List className = {classes.list} >
 				<ListItem button onClick = {() => mealCollapseHandler()}>
 					<ListItemText primary="Meal Type" classes = {{primary : classes.text}}/>
-				  {mealType ? <ExpandLess /> : <ExpandMore />}
+				  {mealType ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
 				</ListItem>
 				<Collapse in={mealType} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
@@ -211,7 +239,7 @@ const DrawerJSX = (props) => {
 												onClick = {() => {mealTypeSelectHandler(index)}}>
 								<ListItemIcon className = {classes.listItemIcon}>
 									<Checkbox
-										checked={selectedMealType.some( i => i === index)}
+										checked={selectedMealType.some( i => i === item)}
 										tabIndex={-1}
 										className = {classes.checkBox}
 										disableRipple/>
@@ -223,12 +251,12 @@ const DrawerJSX = (props) => {
 				</Collapse>
 			</List>
 
-			<Divider width = "100%"/>
+			<Divider width = "100%" className = {classes.divider}/>
 
 			<Button variant="contained" 
 							className = {classes.button} 
 							color = "secondary"
-							onClick = {() => {applyFilters()}}>
+							onClick = {() => {props.applyFilter(applyFilters())}}>
 				Apply
 			</Button>
 

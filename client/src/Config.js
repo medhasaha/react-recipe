@@ -1,5 +1,5 @@
 // const BASE_URL = "https://api.spoonacular.com"
-const BASE_URL_RECIPE = "http://localhost:3001/recipes"
+const BASE_URL_RECIPE = "/recipes"
 const BASE_URL_USER = "http://localhost:3001/user"
 const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
 let id = 1;

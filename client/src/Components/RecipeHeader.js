@@ -4,7 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import CheckBox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';import vegIcon from '../Assets/Icons/veg.svg'
+import Chip from '@material-ui/core/Chip';
+import vegIcon from '../Assets/Icons/veg.svg'
 import nonVegIcon from '../Assets/Icons/nonVeg.svg'
 
 const style = theme => ({
