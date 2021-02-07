@@ -233,7 +233,7 @@ class RecipeDetails extends Component {
 		const { classes } = this.props;
 		return (
 		  <Grid container>
-		    {this.state.details.extendedIngredients.map(item => (
+		    {this.state.details.extendedIngredients.length > 0 && this.state.details.extendedIngredients.map(item => (
 					<Grid item xs = {4}>
 						<Grid container style = {{marginBottom : "30px"}}>
 
@@ -266,7 +266,7 @@ class RecipeDetails extends Component {
 		const { classes } = this.props;
 		return (
 			<Grid container>
-				{this.state.equipments.map(item => (
+				{this.state.equipments.length > 0 && this.state.equipments.map(item => (
 					<Grid item xs = {4}>
 						<Grid container style = {{marginBottom : "30px"}}>
 
@@ -294,7 +294,8 @@ class RecipeDetails extends Component {
 		const { classes } = this.props;
 		return (	
 			<ol className = {classes.ol_style}>
-			  {this.state.details.analyzedInstructions[0].steps.map((item,index) => (
+			  {this.state.details.analyzedInstructions && this.state.details.analyzedInstructions[0] && this.state.details.analyzedInstructions[0].steps.length > 0 &&
+					this.state.details.analyzedInstructions[0].steps.map((item,index) => (
 					<Grid item xs = {12} style = {{display : "flex"}}>
 						<li/>
 						<Typography variant = "subtitle1" style = {{display : "inline"}}
@@ -308,7 +309,6 @@ class RecipeDetails extends Component {
 	}
 
 	changeTabValue = (event, newValue) => {
-		console.log(newValue)
 		this.setState({
 			tabValue : newValue
 		})
