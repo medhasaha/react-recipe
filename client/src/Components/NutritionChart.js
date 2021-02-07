@@ -10,7 +10,7 @@ const style = theme => ({
 class Recipes extends Component {
 	constructor(props){
 		super(props);
-		console.log("Nutrition Charts",this.props)
+		// console.log("Nutrition Charts",this.props)
 		let percentage = [], amounts = [], labels = [];
 		this.props.data.map(item =>{
 			percentage.push(item.percentOfDailyNeeds)
@@ -51,7 +51,7 @@ class Recipes extends Component {
 		const { classes } = this.props;
 		return(
 			<React.Fragment>
-			  <div style = {{height : "500px"}}>
+			  <div style = {{marginTop : "60px"}}>
 				<Doughnut data = {this.state.chartData}
 					type="doughnut"
 					options={{
@@ -68,19 +68,19 @@ class Recipes extends Component {
 						animateScale : false,
 						showScale: true,
 						animateScale: true,
-						title : {
-							position: "top",
-							text: "Nutrition Chart",
-							display: true,
-							fontSize: 18,
-							fontColor: "#111"
-						},
+						// title : {
+						// 	position: "top",
+						// 	text: "Nutrition Chart",
+						// 	display: true,
+						// 	fontSize: 18,
+						// 	fontColor: "#111"
+						// },
 						legend: {
 							display: true,
-							position: "bottom",
+							position: "right",
 							labels: {
 								fontColor: "#333",
-                fontSize: 16
+                fontSize: 14
 							},
 						},
 					}}/>

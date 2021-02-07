@@ -94,10 +94,7 @@ class RecipeCard extends Component {
 		const { classes } = this.props;
 		return(
 			<Card className = {classes.card} 
-						style = {{boxShadow : this.props.boxShadow 
-																	? "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)" 
-																	: "none",
-											position : "relative"}}>
+						style = {{position : "relative"}}>
 				<img className={classes.image} src = {this.props.image}/>
 				<Grid container style = {{margin : "10px", width : "auto"}}>
 					<div className = {classes.titleDiv}>
