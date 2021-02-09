@@ -1,8 +1,9 @@
 const conn = require('../mysqlConfig.js');
 const express = require("express");
+const uuid = require('uuid');
 const router = express.Router();
 
-router.post('/signup', function(req, res) {
+router.post('/signup', (req, res) => {
 	var username = req.body.username;
 	var password = req.body.password;
 	var email = req.body.email;
@@ -16,7 +17,7 @@ router.post('/signup', function(req, res) {
       }else if (result.length > 0) {
 				res.status(409).json({err : 1, errMsg : "Email Already Exists"})
 			}else {
-        conn.query(`INSERT INTO users (username, email, password, createdAt, updatedAt) VALUES ('${username}', '${email}', '${password}', now(), now())`, (err, results) => {
+        conn.query(`INSERT INTO users (uuid, username, email, password, createdAt, updatedAt) VALUES ('${uuid.v4()}', '${username}', '${email}', '${password}', now(), now())`, (err, results) => {
           if(err){
             console.log("server err", err)
             res.status(500).json({err : 1, errMsg : "Server Error"})
@@ -37,21 +38,31 @@ router.post('/signup', function(req, res) {
 router.post('/login', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+
     if (email && password) {
       conn.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
         if (err){
-          console.log("server err", err)
-          res.status(500).json({err : 1, errMsg : "Server Error"})
+          console.log("server err", err);
+          res.status(500).json({err : 1, errMsg : "Server Error"});
+          res.end();
         }if (results.length > 0) {
-          console.log("login session: ",req.session)
           req.session.loggedin = true;
           req.session.user = results[0];
-          res.status(200).json({success : 1})
-          res.end();
+          let _uuid = results[0].uuid 
+          conn.query(`SELECT ck.cookbook_id, ck.cookbook_name FROM cookbooks AS ck, users AS u WHERE ck.uuid = u.uuid AND u.uuid = '${_uuid}'`, (err, results) => {
+            if(err){
+              console.log("server err", err)
+              res.status(500).json({err : 1, errMsg : "Server Error"})
+            }else{
+              res.status(200).json({success : 1, response : results});
+              res.end();
+            }
+          })
         } else {
           res.status(400).json({err : 1, errMsg : 'Incorrect Username and/or Password!'});
+          res.end();
         }           
-    });
+      });
     } else {
       res.status(400).json({err : 1, errMsg : 'Please enter email and Password!'});
       res.end();
@@ -75,6 +86,48 @@ router.get('/user', (req, res) => {
   } else {
     res.status(400).json({err : 1, errMsg : "User Not Logged In"});
   }
+});
+
+router.post('/createCookbook', (req, res) => {
+  if (req.session.loggedin) {
+    let _uuid = req.session.user.uuid;
+    let cookbook_name = req.body.cookbookName;
+
+    // let sqlQuery = `INSERT INTO cookbooks (uuid, cookbook_id, cookbook_name, createdAt, updatedAt) VALUES ('${_uuid}', '${uuid.v4()}', '${cookbook_name}', ${createdAt}, ${updatedAt})`;
+    let sqlQuery = 'INSERT INTO cookbooks SET ?'
+    let sqlObj = {
+      uuid : _uuid,
+      cookbook_id : uuid.v4(),
+      cookbook_name : cookbook_name,
+      createdAt : new Date(),
+      updatedAt : new Date()
+    }
+
+    conn.query(sqlQuery, sqlObj, (err, results) => {
+      if (err){
+        console.log("server err", err)
+        res.status(500).json({err : 1, errMsg : "Server Error"});
+        res.end();
+      }else {
+        conn.query(`SELECT cookbook_id, cookbook_name FROM cookbooks WHERE uuid = '${_uuid}'`, (err, results) => {
+          if(err){
+            console.log("server err", err)
+            res.status(500).json({err : 1, errMsg : "Server Error"})
+          }else{
+            res.status(200).json({success : 1, response : results});
+            res.end();
+          }
+        })
+      }           
+    });
+  } else {
+    res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+    res.end();
+  }
+});
+
+router.post('/bookmarkRecipe', (req, res) => {
+
 });
 
 module.exports = router;
