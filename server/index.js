@@ -10,7 +10,10 @@ const PORT = process.env.PORT || 3001;
 app.use(session({
   secret: 'secret-react-recipe-session',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  // cookie: {
+  //   maxAge: 60 * 1 * 1000
+  // }
 }));
 
 // parse requests of content-type: application/json

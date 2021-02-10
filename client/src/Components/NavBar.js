@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { withRouter } from "react-router";
+
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -83,13 +85,33 @@ const style = theme => ({
 
 class NavBar extends Component {
 	constructor(props){
+		console.log(props)
 		super(props);
 		this.state = {
 		}
 	}
 
+	getToken = () => {
+		const tokenString = sessionStorage.getItem('session');
+		const userToken = JSON.parse(tokenString);
+		// console.log("NavBar", userToken ? true : false)
+		return userToken ? true : false
+	}
+
+	redirect = () => {
+		let isUserLoggedIn = this.getToken() ;
+		isUserLoggedIn 
+		? this.props.history.push({
+				pathname: `/recipe/dashboard`,
+			})
+		: this.props.history.push({
+				pathname: `/recipe/login`,
+			});
+	}
+
   render(){
 		const { classes } = this.props;
+		let isUserLoggedIn = this.getToken() ;
 		return(
 			<div className={classes.root}>
 				<AppBar position="static" className = {classes.appBar} style = {{backgroundColor : this.props.home === true ? "#0d1010" : "#932432"}}>
@@ -111,8 +133,9 @@ class NavBar extends Component {
 								inputProps={{ 'aria-label': 'search' }}/>
 						</div>
 						<div>
-							<Button className = {classes.login} variant="outlined" noWrap>
-							  Login/ Signup
+							<Button className = {classes.login} variant="outlined" noWrap
+							        onClick = {this.redirect}>
+							  {	isUserLoggedIn ? "Dashboard" : "Login/ Signup"}
 						  </Button>
 						</div>
 					</Toolbar>
@@ -122,4 +145,4 @@ class NavBar extends Component {
 	}
 }
 
-export default withStyles(style, {withTheme: true})(NavBar);
+export default withRouter(withStyles(style, {withTheme: true})(NavBar));
