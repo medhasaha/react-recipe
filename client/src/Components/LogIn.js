@@ -111,8 +111,9 @@ const LogIn = (props) => {
 			console.log(res)
 			if(res && res.success){
 				sessionStorage.setItem('session', JSON.stringify(res.sessionID));
-				sessionStorage.setItem('cookbooks', JSON.stringify(res.results));
+				sessionStorage.setItem('cookbooks', JSON.stringify(res.cookbooks));
 				sessionStorage.setItem('user', JSON.stringify(res.user));
+				sessionStorage.setItem('recipes', JSON.stringify(res.recipes));
 				props.history.push({
 					pathname: `${props.baseURL}/home`,
 				});

@@ -76,7 +76,7 @@ class RecipeCard extends Component {
 		this.state = {
 			results : [],
 			isLoaded : false,
-			isBookmarked : false
+			isBookmarked : props.bookMarkedRecipes.includes(props.id)
 		}
 	}
 

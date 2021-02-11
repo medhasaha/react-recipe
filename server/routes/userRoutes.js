@@ -36,6 +36,8 @@ router.post('/signup', (req, res) => {
 router.post('/login', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  let cookbookIds = [];
+  let recipeArr = [];
   //select ck.cookbook_id, cr.recipe_id from cookbooks as ck, cookbooks_recipes as cr where ck.uuid = '3377d2be-c59d-4bf9-af3d-ec5162be8fbb' AND ck.cookbook_id = cr.cookbook_id
 
     if (email && password) {
@@ -53,14 +55,30 @@ router.post('/login', (req, res) => {
             "username" : results[0].username,
             "email" : results[0].email
           }
-          conn.query(`SELECT ck.cookbook_id, ck.cookbook_name FROM cookbooks AS ck, users AS u WHERE ck.uuid = u.uuid AND u.uuid = '${_uuid}'`, (err, results) => {
+          conn.query(`SELECT ck.cookbook_id, ck.cookbook_name FROM cookbooks AS ck, users AS u WHERE ck.uuid = u.uuid AND u.uuid = '${_uuid}'`, (err, cookbook_results) => {
             if(err){
               console.log("server err", err)
               res.status(500).json({err : 1, errMsg : "Server Error"})
             }else{
-              console.log("login sessionID", req.sessionID)
-              res.status(200).json({success : 1, results : results, sessionID : req.sessionID, user : userData});
-              res.end();
+              cookbook_results.map(item => {
+                cookbookIds.push(item.cookbook_id);
+              })
+              conn.query(`SELECT recipe_id FROM cookbooks_recipes WHERE cookbook_id IN (?)`, [cookbookIds], (err, recipe_results) => {
+                if(err){
+                  console.log("server err", err)
+                  res.status(500).json({err : 1, errMsg : "Server Error"})
+                }else{
+                  recipe_results.map(item =>{
+                    recipeArr.push(item.recipe_id);
+                  })
+                  res.status(200).json({success : 1, 
+                                        cookbooks : cookbook_results,
+                                        recipes : recipeArr,  
+                                        sessionID : req.sessionID, 
+                                        user : userData});
+                  res.end();
+                }
+              })
             }
           })
         } else {
