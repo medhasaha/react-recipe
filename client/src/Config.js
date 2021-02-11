@@ -1,6 +1,6 @@
 // const BASE_URL = "https://api.spoonacular.com"
 const BASE_URL_RECIPE = "/recipes"
-const BASE_URL_USER = "http://localhost:3001/user"
+const BASE_URL_USER = "/user"
 const SPLASH_URL = "https://unsplash.com/s/photos/food?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText";
 let id = 1;
 const IMAGE_URL_RECIPE = " https://spoonacular.com/recipeImages/";
@@ -14,15 +14,16 @@ const RECIPE_DETAILS_URL = BASE_URL_RECIPE + `/getRecipeDetails`;
 const SIMILAR_RECIPES_URL = BASE_URL_RECIPE + `/getSimilarRecipes`;
 const RANDOM_RECIPES = BASE_URL_RECIPE + `/getRandomRecipes`;
 const RECIPES_AUTOCOMPLETE = BASE_URL_RECIPE + `/recipeAutocomplete`;
-const RECIPE_TASTE = BASE_URL_RECIPE + `/recipes/${id}/tasteWidget.json`;
-const RECIPE_NUTRITION = BASE_URL_RECIPE + `/recipes/${id}/nutritionWidget.json`;
-const RECIPE_INSTRUCTION = BASE_URL_RECIPE + `/recipes/${id}/analyzedInstructions`;
 const RECIPE_EQUIPMENTS = BASE_URL_RECIPE + `/getRecipeEquipments`;
 
-const LOGIN_URL = `/user/login`;
-const SIGNUP_URL = `/user/signup`;
-const DASHBOARD_URL =  `/user/dashboard`;
-const USER_URL =  `/user/user`
+const LOGIN_URL = BASE_URL_USER + `/login`;
+const SIGNUP_URL = BASE_URL_USER + `/signup`;
+const DASHBOARD_URL = BASE_URL_USER + `/dashboard`;
+const USER_URL =  BASE_URL_USER + `/user`
+const CREATE_COOKBOOK_URL =  BASE_URL_USER + `/createCookbook`
+const GET_BOOKMARKED_RECIPES_URL =  BASE_URL_USER + `/getBookmarkedRecipes`
+const BOOKMARK_RECIPE_URL =  BASE_URL_USER + `/bookmarkRecipe`
+
 
 export default {
 	RECIPES_AUTOCOMPLETE,
@@ -40,5 +41,8 @@ export default {
 	LOGIN_URL,
 	SIGNUP_URL,
 	DASHBOARD_URL,
-	USER_URL
+	USER_URL,
+	CREATE_COOKBOOK_URL,
+	GET_BOOKMARKED_RECIPES_URL,
+	BOOKMARK_RECIPE_URL
 };

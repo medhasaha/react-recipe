@@ -330,7 +330,7 @@ class RecipesHome extends Component {
 	}
 
 	componentDidMount(){
-		this.getUserDetails();
+		// this.getUserDetails();
 		if (this.props.location && this.props.location.state && this.props.location.state.data){
       this.setState({ 
 				...this.props.location.state.data,

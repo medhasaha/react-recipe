@@ -48,13 +48,18 @@ router.post('/login', (req, res) => {
           req.session.loggedin = true;
           req.session.user = results[0];
           let _uuid = results[0].uuid 
+          let userData = {
+            "uuid" : results[0].uuid,
+            "username" : results[0].username,
+            "email" : results[0].email
+          }
           conn.query(`SELECT ck.cookbook_id, ck.cookbook_name FROM cookbooks AS ck, users AS u WHERE ck.uuid = u.uuid AND u.uuid = '${_uuid}'`, (err, results) => {
             if(err){
               console.log("server err", err)
               res.status(500).json({err : 1, errMsg : "Server Error"})
             }else{
               console.log("login sessionID", req.sessionID)
-              res.status(200).json({success : 1, results : results, sessionID : req.sessionID});
+              res.status(200).json({success : 1, results : results, sessionID : req.sessionID, user : userData});
               res.end();
             }
           })
@@ -80,6 +85,11 @@ router.get('/dashboard', (req, res) => {
 
 router.get('/user', (req, res) => {
   if (req.session.loggedin) {
+    let userData = {
+      "uuid" : req.session.user.uuid,
+      "username" : req.session.user.username,
+      "email" : req.session.user.email
+    }
     res.status(200).json({result : req.session.user});
   } else {
     res.status(400).json({err : 1, errMsg : "User Not Logged In"});
@@ -112,7 +122,7 @@ router.post('/createCookbook', (req, res) => {
             console.log("server err", err)
             res.status(500).json({err : 1, errMsg : "Server Error"})
           }else{
-            res.status(200).json({success : 1, response : results});
+            res.status(200).json({success : 1, results : results});
             res.end();
           }
         })
@@ -123,6 +133,37 @@ router.post('/createCookbook', (req, res) => {
     res.end();
   }
 });
+
+router.get('/getBookmarkedRecipes', (req,res) => {
+  if (req.session.loggedin) {
+    let cookbookIds = req.query.cookbookIds;
+    let arr = cookbookIds.split(',');
+    // let sqlQuery =  `SELECT ck.cookbook_id, cr.recipe_id FROM cookbooks AS ck, cookbooks_recipes AS cr where ck.uuid = '${user_uuid}' AND ck.cookbook_id = cr.cookbook_id`;
+    let sqlQuery = `SELECT cr.cookbook_id, r.recipe_id, r.recipe_name, r.image_type from cookbooks_recipes AS cr, recipes AS r WHERE r.recipe_id = cr.recipe_id and cr.cookbook_id in (?);`;
+    conn.query(sqlQuery, [arr], (err, results) => {
+      if (err){
+        console.log("server err", err)
+        res.status(500).json({err : 1, errMsg : "Server Error"});
+        res.end();
+      }else {
+        let cookbookObj = arr.reduce((acc,curr)=> (acc[curr]=[],acc),{});
+        results.map(item => {
+          cookbookObj[item.cookbook_id].push({
+            "recipe_id": item.recipe_id,
+            "recipe_name": item.recipe_name,
+            "image_type": item.image_type
+          })
+        })
+        console.log(cookbookObj);
+        res.status(200).json({success : 1, results : cookbookObj});
+        res.end();
+      }           
+    });
+  }else{
+    res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+    res.end();
+  }
+})
 
 router.post('/bookmarkRecipe', (req, res) => {
   if (req.session.loggedin) {
@@ -138,7 +179,7 @@ router.post('/bookmarkRecipe', (req, res) => {
       createdAt : new Date(),
       updatedAt : new Date()
     }
-    let cookbooks_recipes_sqlQuery = `INSERT INTO cookbooks_recipess SET ?`;
+    let cookbooks_recipes_sqlQuery = `INSERT INTO cookbooks_recipes SET ?`;
     let recipes_sqlObject = {
       recipe_id,
       recipe_name,
@@ -196,7 +237,7 @@ router.post('/bookmarkRecipe', (req, res) => {
                   });
                 }
                 console.log('Transaction Complete.');
-                conn.end();
+                // conn.end();
               });
             res.json({success : 1})
           })

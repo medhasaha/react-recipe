@@ -1,22 +1,20 @@
 import React, {Component} from 'react';
+import {getBookmarkedRecipesAPI} from '../ServiceClass.js';
+import NavBar from './NavBar.js';
+
 import { withStyles } from '@material-ui/core/styles';
 import dashboardBackground from '../Assets/Images/background/dashboard_background.jpg';
-import NavBar from './NavBar.js';
-import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import { Typography, Card, Grid } from '@material-ui/core';
-
+import Cookbook from '../Assets/Icons/Cookbook.svg'
 
 const style = theme => ({
 	root : {
-		backgroundImage : `url(${dashboardBackground})`,
-		height : "100vh",
-		backgroundAttachment: "fixed",
-		backgroundRepeat: "no-repeat",
-		backgroundSize: "cover",
-		backgroundPosition: "top center",
-		// alignItems : "center",
-		// justifyContent : "center",
-		// display : "flex"
+		// backgroundImage : `url(${dashboardBackground})`,
+		// height : "100vh",
+		// backgroundAttachment: "fixed",
+		// backgroundRepeat: "no-repeat",
+		// backgroundSize: "cover",
+		// backgroundPosition: "top center",
 	},
 	card : {
 		height : "100pxpx",
@@ -25,6 +23,19 @@ const style = theme => ({
 		backgroundColor: "transparent",
 		boxShadow : "none"
 	},
+	gridCenter : {
+  	alignItems : "center",
+		justifyContent : "center",
+		display : "flex"
+	},
+	logo : {
+		height : "100px",
+		width : "100px",
+		cursor : "pointer"
+	},
+	cookbookName : {
+		cursor : "pointer"
+	}
 })
 
 class Dashboard extends Component {
@@ -32,13 +43,29 @@ class Dashboard extends Component {
 		super(props);
 		const cookbooks = sessionStorage.getItem('cookbooks');
 		this.state = {
-			cookbooks : JSON.parse(cookbooks)
+			cookbooks : JSON.parse(cookbooks) || [],
+			cookBooksData : []
 		}
+	}
+
+	componentDidMount(){
+		this.getCookBooksData()
+	}
+
+	getCookBooksData = () => {
+		let cookbookIDsArray = [];
+		this.state.cookbooks.map(item =>{ cookbookIDsArray.push(item.cookbook_id) })
+		let cookbookIds = cookbookIDsArray.join()
+		getBookmarkedRecipesAPI(cookbookIds)
+		.then(res => {
+			this.setState({
+				cookBooksData : res
+			},() => console.log(this.state))
+		}).catch(err => {console.log(err)})
 	}
 
   render(){
 		const { classes } = this.props;
-		console.log(this.state.cookbooks)
 		return(
 			<div className={classes.root}>
 				<Grid container>
@@ -46,14 +73,16 @@ class Dashboard extends Component {
 						<NavBar home = {true}/>
 					</Grid>
 					<Grid container item xs = {12} style = {{margin : "84px 40px 0px 40px"}}>
-						{this.state.cookbooks.map(item => (
-							<Grid item xs = {1}>
+						{this.state.cookbooks.length > 0 && this.state.cookbooks.map(item => (
+							<Grid item xs = {2}>
 								<Card className = {classes.card}>
-									<Grid item xs = {12}>
-										<CollectionsBookmarkIcon/>
+									<Grid item xs = {12}  className = {classes.gridCenter}>
+										<img src = {Cookbook} className = {classes.logo}/>
 									</Grid>
-									<Grid item xs = {12}>
-										<Typography variant = "subtitle1">{item.cookbook_name}</Typography>
+									<Grid item xs = {12}  className = {classes.gridCenter}>
+										<Typography variant = "subtitle1" className = {classes.cookbookName}>
+										  {item.cookbook_name}
+										</Typography>
 									</Grid>
 								</Card>	
 							</Grid>

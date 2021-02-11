@@ -85,7 +85,7 @@ const style = theme => ({
 
 class NavBar extends Component {
 	constructor(props){
-		console.log(props)
+		// console.log(props)
 		super(props);
 		this.state = {
 		}

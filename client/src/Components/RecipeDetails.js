@@ -101,11 +101,6 @@ const style = theme => ({
 	gridCenter : {
 		textAlign : "center"
 	},
-	gridCenterFlex : {
-		alignItems : "center",
-		justifyContent : "center",
-		display : "flex"
-	},
 })
 
 class RecipeDetails extends Component {

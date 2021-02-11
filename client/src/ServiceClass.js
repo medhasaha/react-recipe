@@ -144,6 +144,60 @@ export const userAPI =(username, email, password) =>{
 		.catch(error => {console.log("[ServiceClass] userAPI error",error)})
 }
 
+export const createCookbookAPI =(uuid, cookbookName) =>{
+	let data = {
+		"uuid" : uuid,
+		"cookbookName" : cookbookName
+	}
+	let queryURL = CONFIG.CREATE_COOKBOOK_URL;
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.result;
+		})
+		.catch(error => {console.log("[ServiceClass] createCookbookAPI error",error)})
+}
+
+export const getBookmarkedRecipesAPI =(cookbookIds) =>{
+	let queryURL = CONFIG.GET_BOOKMARKED_RECIPES_URL;
+		return fetch(queryURL + `?cookbookIds=${cookbookIds}`)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.results;
+		})
+		.catch(error => {console.log("[ServiceClass] getBookmarkedRecipesAPI error",error)})
+}
+
+export const bookmarkRecipeAPI =(cookbook_id, recipe) =>{
+	let queryURL = CONFIG.BOOKMARK_RECIPE_URL;
+	let data = {
+		"cookbook_id" : cookbook_id,
+		"recipe_id" : recipe.id,
+		"recipe_name" : recipe.title,
+		"image_type" : recipe.image
+	}
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.result;
+		})
+		.catch(error => {console.log("[ServiceClass] bookmarkRecipeAPI error",error)})
+}
+
 export const attributionArray =  [
 	{
 		background : "background1",
