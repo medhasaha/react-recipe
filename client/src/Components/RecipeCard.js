@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {recipeSearchAPI} from '../ServiceClass.js'
+import {bookmarkRecipeAPI} from '../ServiceClass.js'
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +9,10 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import BookmarkEmptyIcon from '@material-ui/icons/BookmarkBorder';
 import BookmarkFilledIcon from '@material-ui/icons/Bookmark';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import Cookbook from '../Assets/Icons/Cookbook.svg'
+import CookbookColored from '../Assets/Icons/CookbookColored.svg'
 
 const style = theme => ({
 	card : {
@@ -66,6 +70,27 @@ const style = theme => ({
 		color : "white",
 		cursor : "pointer",
 		backgroundColor: "rgba(0,0,0,0.5)",
+	},
+	cookbookCard : {
+		borderRadius : "4px",
+		backgroundColor: "#fff",
+		boxShadow : "none",
+		padding : "20px 0px",
+		cursor : "pointer"
+	},
+	gridCenter : {
+  	alignItems : "center",
+		justifyContent : "center",
+		display : "flex"
+	},
+	logo : {
+		height : "70px",
+		width : "70px",
+	},
+	dialog : {
+		height : "25%",
+		width : "30%",
+		padding : "20px"
 	}
 })
 
@@ -76,7 +101,8 @@ class RecipeCard extends Component {
 		this.state = {
 			results : [],
 			isLoaded : false,
-			isBookmarked : props.bookMarkedRecipes.includes(props.id)
+			isBookmarked : props.bookMarkedRecipes && props.bookMarkedRecipes.includes(props.id) || false,
+			openDialog : false,
 		}
 	}
 
@@ -86,37 +112,78 @@ class RecipeCard extends Component {
 
 	bookmarkClickHandler = () => {
 		this.setState({
-			isBookmarked : !(this.state.isBookmarked)
+			// isBookmarked : !(this.state.isBookmarked)
+			openDialog : true
 		})
+	}
+
+	cookbookClickHandler = (cookbook_id) => {
+		bookmarkRecipeAPI(cookbook_id, this.props.id, this.props.title, "jpg")
+		.then(res => {
+			if(res.success){
+				this.setState({
+					isBookmarked : true,
+					openDialog : false
+				})
+			}
+		})
+	}
+
+	dialogJSX = () => {
+		const { classes } = this.props;
+		const ck = sessionStorage.getItem('cookbooks');
+		const cookbooks = JSON.parse(ck)
+		return(
+			<Grid container spacing = {4}>
+			{cookbooks.length > 0 && cookbooks.map(item => (
+				<Grid item xs = {3}>
+					<Card className = {classes.cookbookCard} onClick = {() => {this.cookbookClickHandler(item.cookbook_id)}}>
+						<Grid item xs = {12}  className = {classes.gridCenter}>
+							<img src = {Cookbook} 
+									className = {classes.logo}/>
+						</Grid>
+						<Grid item xs = {12}  className = {classes.gridCenter}>
+							<Typography variant = "subtitle1" className = {classes.cookbookName}>
+								{item.cookbook_name}
+							</Typography>
+						</Grid>
+					</Card>	
+				</Grid>
+			))}
+		</Grid>
+		)
 	}
 
   render(){
 		const { classes } = this.props;
 		return(
-			<Card className = {classes.card} 
-						style = {{position : "relative"}}>
-				<img className={classes.image} src = {this.props.image}/>
-				<Grid container style = {{margin : "10px", width : "auto"}}>
-					<div className = {classes.titleDiv}>
-					  <Typography variant = "h6" className = {classes.title} 
-											onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
-						  {this.props.title}
-						</Typography>
-					</div>
-					{/*<Grid item xs style = {{textAlign : "center"}}>
-						<Typography className = {classes.secondaryText}>{this.props.servings + " Servings / " + this.props.time + " Min"}</Typography>
+			<React.Fragment>
+				<Card className = {classes.card} 
+							style = {{position : "relative"}}>
+					<img className={classes.image} src = {this.props.image}/>
+					<Grid container style = {{margin : "10px", width : "auto"}}>
+						<div className = {classes.titleDiv}>
+							<Typography variant = "h6" className = {classes.title} 
+												onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
+								{this.props.title}
+							</Typography>
+						</div>
 					</Grid>
-					<Grid item xs>
-						<Typography className = {classes.secondaryText} style = {{float : "right"}}>{this.props.time + " Min"}</Typography>
-					</Grid>*/}
-				</Grid>
-				<BookmarkEmptyIcon className = {classes.bookmarkIcon}
-													 onClick = {this.bookmarkClickHandler} 
-				                   style = {{display : this.state.isBookmarked ? "none" : "block"}}/>
-				<BookmarkFilledIcon className = {classes.bookmarkIcon} 
+					<BookmarkEmptyIcon className = {classes.bookmarkIcon}
 														onClick = {this.bookmarkClickHandler} 
-				                    style = {{display : this.state.isBookmarked ? "block" : "none"}}/>
-			</Card>	
+														style = {{display : this.state.isBookmarked ? "none" : "block"}}/>
+					<BookmarkFilledIcon className = {classes.bookmarkIcon} 
+															onClick = {this.bookmarkClickHandler} 
+															style = {{display : this.state.isBookmarked ? "block" : "none"}}/>
+				</Card>	
+
+				<Dialog classes = {{paper : classes.dialog}}
+				        onClose={() => { this.setState({openDialog : false}) }} 
+				        open={this.state.openDialog}>
+				  <DialogTitle>Choose Cookbook</DialogTitle>
+						{this.dialogJSX()}
+			  </Dialog>
+			</React.Fragment>
 		)
 	}
 }

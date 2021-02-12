@@ -176,13 +176,13 @@ export const getBookmarkedRecipesAPI =(cookbookIds) =>{
 		.catch(error => {console.log("[ServiceClass] getBookmarkedRecipesAPI error",error)})
 }
 
-export const bookmarkRecipeAPI =(cookbook_id, recipe) =>{
+export const bookmarkRecipeAPI =(cookbook_id, recipe_id, recipe_name, image_type) =>{
 	let queryURL = CONFIG.BOOKMARK_RECIPE_URL;
 	let data = {
 		"cookbook_id" : cookbook_id,
-		"recipe_id" : recipe.id,
-		"recipe_name" : recipe.title,
-		"image_type" : recipe.image
+		"recipe_id" : recipe_id,
+		"recipe_name" : recipe_name,
+		"image_type" : image_type
 	}
 		return fetch(queryURL, {
 			method: "POST",
