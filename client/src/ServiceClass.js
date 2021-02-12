@@ -193,7 +193,7 @@ export const bookmarkRecipeAPI =(cookbook_id, recipe_id, recipe_name, image_type
 			return response.json();
 		})
 		.then(data => {
-			return data.result;
+			return data;
 		})
 		.catch(error => {console.log("[ServiceClass] bookmarkRecipeAPI error",error)})
 }
