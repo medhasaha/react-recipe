@@ -23,6 +23,8 @@ const USER_URL =  BASE_URL_USER + `/user`
 const CREATE_COOKBOOK_URL =  BASE_URL_USER + `/createCookbook`
 const GET_BOOKMARKED_RECIPES_URL =  BASE_URL_USER + `/getBookmarkedRecipes`
 const BOOKMARK_RECIPE_URL =  BASE_URL_USER + `/bookmarkRecipe`
+const DELETE_BOOKMARK_URL =  BASE_URL_USER + `/deleteBookmark`
+const CHANGE_COOKBOOK_URL =  BASE_URL_USER + `/changeCookbook`
 
 
 export default {
@@ -44,5 +46,7 @@ export default {
 	USER_URL,
 	CREATE_COOKBOOK_URL,
 	GET_BOOKMARKED_RECIPES_URL,
-	BOOKMARK_RECIPE_URL
+	BOOKMARK_RECIPE_URL,
+	DELETE_BOOKMARK_URL,
+	CHANGE_COOKBOOK_URL
 };

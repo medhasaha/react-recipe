@@ -96,7 +96,7 @@ router.get('/dashboard', (req, res) => {
     if (req.session.loggedin) {
         res.status(200).json({success : 1});
       } else {
-      res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+      res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
     }
     res.end();
   });
@@ -110,7 +110,7 @@ router.get('/user', (req, res) => {
     }
     res.status(200).json({result : req.session.user});
   } else {
-    res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
   }
 });
 
@@ -147,7 +147,29 @@ router.post('/createCookbook', (req, res) => {
       }           
     });
   } else {
-    res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
+    res.end();
+  }
+});
+
+router.post('/changeCookbook', (req, res) => {
+  if (req.session.loggedin) {
+    let recipe_id = req.body.recipe_id;
+    let cookbook_id = req.body.cookbook_id
+    let updatedAt = new Date()
+    sqlQuery = `UPDATE cookbooks_recipes SET cookbook_id = '${cookbook_id}', updatedAt = ? WHERE recipe_id = '${recipe_id}'`;
+    conn.query(sqlQuery, updatedAt, (err, results) => {
+      if (err){
+        console.log("server err", err)
+        res.status(500).json({err : 1, errMsg : "Server Error"});
+        res.end();
+      }else {
+        res.status(200).json({success : 1});
+        res.end();
+      }           
+    });
+  } else {
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
     res.end();
   }
 });
@@ -172,13 +194,12 @@ router.get('/getBookmarkedRecipes', (req,res) => {
             "image_type": item.image_type
           })
         })
-        console.log(cookbookObj);
         res.status(200).json({success : 1, results : cookbookObj});
         res.end();
       }           
     });
   }else{
-    res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
     res.end();
   }
 })
@@ -276,10 +297,101 @@ router.post('/bookmarkRecipe', (req, res) => {
       })
      })
     }else{//user not logged in
-      res.status(400).json({err : 1, errMsg : "User Not Logged In"});
+      res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
       res.end();
     }
 
+});
+
+router.post('/deleteBookmark', (req, res) => {
+  if (req.session.loggedin) {
+    let recipe_id = req.body.recipe_id;
+    let cookbook_id = req.body.cookbook_id
+    let cookbooks_recipes_select_sqlQuery = `SELECT * FROM cookbooks_recipes WHERE recipe_id = '${recipe_id}'`;
+    let cookbooks_recipes_delete_sqlQuery = `DELETE FROM cookbooks_recipes WHERE recipe_id = '${recipe_id}' AND cookbook_id = '${cookbook_id}'`;
+    let recipes_delete_sqlQuery = `DELETE FROM recipes WHERE recipe_id = '${recipe_id}'`;
+
+    //BEGIN TRANSACTION
+    conn.beginTransaction(function(err) {
+      if (err) { throw err; }
+      conn.query(cookbooks_recipes_select_sqlQuery, (err, results) => {
+        if(err){
+          res.status(500).json({ err: 1, errMsg : err.sqlMessage, errCode : err.code})
+        }else{
+          let queryArr = []
+          if(results.length === 1){
+            let promise1 = new Promise((resolve, reject) => {
+              conn.query(recipes_delete_sqlQuery, function (err, result) {
+                if (err){
+                  reject(err);
+                  conn.rollback(function() {
+                    console.log("promise rollback...........",err.code, err.sqlMessage);
+                  });
+                }
+                else {
+                  resolve(result)
+                }
+              })
+            })
+            queryArr.push(promise1)
+          }
+
+          let promise2 = new Promise((resolve, reject) => {
+            conn.query(cookbooks_recipes_delete_sqlQuery, function (err, result) {
+              if (err){
+                reject(err);
+                conn.rollback(function() {
+                  console.log("promise rollback...........",err.code, err.sqlMessage);
+                });
+              }else if(result.affectedRows === 0){
+                let err = {
+                  code : "NO_MATCHING_RESULT",
+                  sqlMessage : "no entry in cookbooks_recipes"
+                }
+                reject(err);
+                conn.rollback(function() {
+                  console.log("promise rollback...........");
+                });
+              }else {
+                resolve(result)
+              }
+            })
+          })
+          queryArr.push(promise2)
+
+          Promise.all(queryArr)
+          .then((result) => {
+            conn.commit(function(err) {
+                if (err) {
+                  conn.rollback(function() {
+                    throw err;
+                  });
+                }
+                console.log('Transaction Complete.');
+                // conn.end();
+              });
+            res.json({success : 1})
+          })
+          .catch(err => {
+            console.log("promise all catch.........",err)
+            res.status(500).json({err: 1, errMsg : err.sqlMessage, errCode : err.code})
+            conn.commit(function(err) {
+              if (err) {
+                conn.rollback(function() {
+                  throw err;
+                });
+              }
+              console.log('Transaction Complete.');
+              // conn.end();
+            });
+          })//promise.all catch
+        }
+      })
+     })
+  } else {
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
+    res.end();
+  }
 });
 
 module.exports = router;

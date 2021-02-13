@@ -129,7 +129,6 @@ class RecipeSearch extends Component {
 		super(props);
 		// console.log("RecipeSearch: ",props)
 		let query_string = queryString.parse(props.location.search)
-		const savedRecipes = sessionStorage.getItem('recipes');
 		this.state = {
 			results : [],
 			isLoaded : false,
@@ -141,7 +140,6 @@ class RecipeSearch extends Component {
 			sortParameter : query_string.sortParameter || "",
 			number : query_string.number || 20,
 			offset : query_string.offset || 0,
-			bookmarkedRecipes : JSON.parse(savedRecipes) || []
 		}
 	}
 
@@ -250,8 +248,7 @@ class RecipeSearch extends Component {
 															// servings = {item.servings}
 															// time = {item.readyInMinutes}
 															boxShadow = {false}
-															redirectToRecipeDetails = {this.redirectToRecipeDetails}
-															bookMarkedRecipes = {this.state.bookmarkedRecipes}/>
+															redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
 								</Grid>
 							))}
 						</Grid>}

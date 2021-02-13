@@ -3,6 +3,7 @@ import {getBookmarkedRecipesAPI} from '../ServiceClass.js';
 import CONFIG from '../Config.js'
 import NavBar from './NavBar.js';
 import RecipeCard from './RecipeCard.js'
+import AddIcon from '@material-ui/icons/AddCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import dashboardBackground from '../Assets/Images/background/dashboard_background.jpg';
@@ -43,6 +44,12 @@ const style = theme => ({
 		textAlign : "center",
 		marginTop : "80px",
 		width : "100%"
+	},
+	addCookbookIcon : {
+		height: "35px",
+    width: "35px",
+    verticalAlign: "bottom",
+    marginLeft: "10px",
 	}
 })
 
@@ -50,10 +57,11 @@ class Dashboard extends Component {
 	constructor(props){
 		super(props);
 		const cookbooks = sessionStorage.getItem('cookbooks');
+		const cookbookIds = JSON.parse(cookbooks)
 		this.state = {
 			cookbooks : JSON.parse(cookbooks) || [],
 			cookbooksData : null,
-			activeID : JSON.parse(cookbooks)[0].cookbook_id,
+			activeID : cookbookIds && cookbookIds.length > 0 && cookbookIds[0].cookbook_id || "",
 			isLoaded : false
 		}
 	}
@@ -101,8 +109,10 @@ class Dashboard extends Component {
 						<Grid item xs = {8} >
 							<Grid container>
 
-							  <Grid item xs = {12}>
-									<Typography variant = "h6">My Cookbooks</Typography>
+							  <Grid item xs = {12} style = {{marginBottom : "20px"}}>
+									<Typography variant = "h6">
+									  My Cookbooks <AddIcon className = {classes.addCookbookIcon}/>
+									</Typography>
 								</Grid>
 
 								<Grid container item xs = {12} spacing = {4}>
