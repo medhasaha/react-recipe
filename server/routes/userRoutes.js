@@ -176,6 +176,7 @@ router.post('/changeCookbook', (req, res) => {
 
 router.post('/changeCookbookName', (req,res) => {
   if (req.session.loggedin) {
+    let _uuid = req.session.user.uuid;
     let cookbook_id = req.body.cookbook_id;
     let new_name = req.body.new_name;
     let updatedAt = new Date()
@@ -186,8 +187,15 @@ router.post('/changeCookbookName', (req,res) => {
         res.status(500).json({err : 1, errMsg : "Server Error"});
         res.end();
       }else {
-        res.status(200).json({success : 1});
-        res.end();
+        conn.query(`SELECT cookbook_id, cookbook_name FROM cookbooks WHERE uuid = '${_uuid}'`, (err, results) => {
+          if(err){
+            console.log("server err", err)
+            res.status(500).json({err : 1, errMsg : "Server Error"})
+          }else{
+            res.status(200).json({success : 1, results : results});
+            res.end();
+          }
+        })
       }           
     });
   } else {
@@ -216,92 +224,128 @@ router.post('/deleteCookbook', (req, res) => {
         }else{
           let recipe_arr = [];
           results1.map(item => recipe_arr.push(item.recipe_id))
-          conn.query(cookbooks_recipes_count_sqlQuery, [recipe_arr], (err, results2) => {
-            if(err){
-              res.status(500).json({ err: 1, errMsg : err.sqlMessage, errCode : err.code})
-            }else{
-              let remove_recipe_arr = [];
-              results2.map(item => {
-                if(item.count === 1){
-                  remove_recipe_arr.push(item.recipe_id)
-                }
-              })
-              let queryArr = [];
-
-              let promise1 = new Promise((resolve, reject) => {
-                conn.query(cookbooks_delete_sqlQuery, function (err, result) {
-                  if (err){
-                    reject(err);
-                    conn.rollback(function() {
-                      console.log("promise rollback...........",err.code, err.sqlMessage);
-                    });
-                  }
-                  else {
-                    resolve(result)
+          if(recipe_arr.length > 0){
+            conn.query(cookbooks_recipes_count_sqlQuery, [recipe_arr], (err, results2) => {
+              if(err){
+                res.status(500).json({ err: 1, errMsg : err.sqlMessage, errCode : err.code})
+              }else{
+                let remove_recipe_arr = [];
+                results2.map(item => {
+                  if(item.count === 1){
+                    remove_recipe_arr.push(item.recipe_id)
                   }
                 })
-              })
-              queryArr.push(promise1)
+                let queryArr = [];
 
-              let promise2 = new Promise((resolve, reject) => {
-                conn.query(cookbooks_recipes_delete_sqlQuery, function (err, result) {
-                  if (err){
-                    reject(err);
-                    conn.rollback(function() {
-                      console.log("promise rollback...........",err.code, err.sqlMessage);
-                    });
-                  }
-                  else {
-                    resolve(result)
-                  }
+                let promise1 = new Promise((resolve, reject) => {
+                  conn.query(cookbooks_delete_sqlQuery, function (err, result) {
+                    if (err){
+                      reject(err);
+                      conn.rollback(function() {
+                        console.log("promise rollback...........",err.code, err.sqlMessage);
+                      });
+                    }
+                    else {
+                      resolve(result)
+                    }
+                  })
                 })
-              })
-              queryArr.push(promise2)
+                queryArr.push(promise1)
 
-              let promise3 = new Promise((resolve, reject) => {
-                conn.query(recipes_delete_sqlQuery, [remove_recipe_arr], function (err, result) {
-                  if (err){
-                    reject(err);
-                    conn.rollback(function() {
-                      console.log("promise rollback...........",err.code, err.sqlMessage);
-                    });
-                  }
-                  else {
-                    resolve(result)
-                  }
+                let promise2 = new Promise((resolve, reject) => {
+                  conn.query(cookbooks_recipes_delete_sqlQuery, function (err, result) {
+                    if (err){
+                      reject(err);
+                      conn.rollback(function() {
+                        console.log("promise rollback...........",err.code, err.sqlMessage);
+                      });
+                    }
+                    else {
+                      resolve(result)
+                    }
+                  })
                 })
-              })
-              queryArr.push(promise3)
+                queryArr.push(promise2)
 
-              Promise.all(queryArr)
-              .then((result) => {
-                conn.commit(function(err) {
+                let promise3 = new Promise((resolve, reject) => {
+                  conn.query(recipes_delete_sqlQuery, [remove_recipe_arr], function (err, result) {
+                    if (err){
+                      reject(err);
+                      conn.rollback(function() {
+                        console.log("promise rollback...........",err.code, err.sqlMessage);
+                      });
+                    }
+                    else {
+                      resolve(result)
+                    }
+                  })
+                })
+                queryArr.push(promise3)
+
+                Promise.all(queryArr)
+                .then((result) => {
+                  conn.query(`SELECT cookbook_id, cookbook_name FROM cookbooks WHERE uuid = '${_uuid}'`, (err, results) => {
+                    if(err){
+                      console.log("server err", err)
+                      res.status(500).json({err : 1, errMsg : "Server Error"})
+                      conn.rollback(function() {
+                        console.log("promise rollback...........",err.code, err.sqlMessage);
+                      });
+                    }else{
+                      res.status(200).json({success : 1, results : results});
+                      conn.commit(function(err) {
+                        if (err) {
+                          conn.rollback(function() {
+                            throw err;
+                          });
+                        }
+                      });
+                    }
+                  })
+                })
+                .catch(err => {
+                  console.log("promise all catch.........",err)
+                  res.status(500).json({err: 1, errMsg : err.sqlMessage, errCode : err.code})
+                  conn.commit(function(err) {
                     if (err) {
                       conn.rollback(function() {
                         throw err;
                       });
                     }
-                    console.log('Transaction Complete.');
-                    // conn.end();
                   });
-                res.status(200).json({success : 1})
-              })
-              .catch(err => {
-                console.log("promise all catch.........",err)
-                res.status(500).json({err: 1, errMsg : err.sqlMessage, errCode : err.code})
-                conn.commit(function(err) {
-                  if (err) {
+                })//promise.all catch
+              }
+            })
+          }else{
+            conn.query(cookbooks_delete_sqlQuery, (err, results) => {
+              if (err){
+                console.log("server err", err)
+                res.status(500).json({err : 1, errMsg : "Server Error"});
+                conn.rollback(function() {
+                  console.log("promise rollback...........",err.code, err.sqlMessage);
+                });
+              }else {
+                conn.query(`SELECT cookbook_id, cookbook_name FROM cookbooks WHERE uuid = '${_uuid}'`, (err, select_results) => {
+                  if(err){
+                    console.log("server err", err)
+                    res.status(500).json({err : 1, errMsg : "Server Error"});
                     conn.rollback(function() {
-                      throw err;
+                      console.log("promise rollback...........",err.code, err.sqlMessage);
+                    });
+                  }else{
+                    res.status(200).json({success : 1, results : select_results});
+                    conn.commit(function(err) {
+                      if (err) {
+                        conn.rollback(function() {
+                          throw err;
+                        });
+                      }
                     });
                   }
-                  console.log('Transaction Complete.');
-                  // conn.end();
-                });
-              })//promise.all catch
-
-            }
-          })
+                })
+              }           
+            });
+          }
         }
       })
      })

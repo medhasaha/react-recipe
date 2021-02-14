@@ -20,11 +20,13 @@ const LOGIN_URL = BASE_URL_USER + `/login`;
 const SIGNUP_URL = BASE_URL_USER + `/signup`;
 const DASHBOARD_URL = BASE_URL_USER + `/dashboard`;
 const USER_URL =  BASE_URL_USER + `/user`
-const CREATE_COOKBOOK_URL =  BASE_URL_USER + `/createCookbook`
+const CREATE_COOKBOOK_URL =  BASE_URL_USER + `/createCookbook`;
+const CHANGE_COOKBOOK_URL =  BASE_URL_USER + `/changeCookbook`;
+const CHANGE_COOKBOOK_NAME_URL =  BASE_URL_USER + `/changeCookbookName`;
+const DELETE_COOKBOOK_URL = BASE_URL_USER + `/deleteCookbook`;
 const GET_BOOKMARKED_RECIPES_URL =  BASE_URL_USER + `/getBookmarkedRecipes`
 const BOOKMARK_RECIPE_URL =  BASE_URL_USER + `/bookmarkRecipe`
 const DELETE_BOOKMARK_URL =  BASE_URL_USER + `/deleteBookmark`
-const CHANGE_COOKBOOK_URL =  BASE_URL_USER + `/changeCookbook`
 
 
 export default {
@@ -48,5 +50,7 @@ export default {
 	GET_BOOKMARKED_RECIPES_URL,
 	BOOKMARK_RECIPE_URL,
 	DELETE_BOOKMARK_URL,
-	CHANGE_COOKBOOK_URL
+	CHANGE_COOKBOOK_URL,
+	CHANGE_COOKBOOK_NAME_URL,
+	DELETE_COOKBOOK_URL
 };

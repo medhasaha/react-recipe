@@ -144,9 +144,8 @@ export const userAPI =(username, email, password) =>{
 		.catch(error => {console.log("[ServiceClass] userAPI error",error)})
 }
 
-export const createCookbookAPI =(uuid, cookbookName) =>{
+export const createCookbookAPI =(cookbookName) =>{
 	let data = {
-		"uuid" : uuid,
 		"cookbookName" : cookbookName
 	}
 	let queryURL = CONFIG.CREATE_COOKBOOK_URL;
@@ -159,7 +158,7 @@ export const createCookbookAPI =(uuid, cookbookName) =>{
 			return response.json();
 		})
 		.then(data => {
-			return data.result;
+			return data;
 		})
 		.catch(error => {console.log("[ServiceClass] createCookbookAPI error",error)})
 }
@@ -182,6 +181,45 @@ export const changeCookbookAPI =(cookbook_id, recipe_id) =>{
 			return data;
 		})
 		.catch(error => {console.log("[ServiceClass] changeCookbookAPI error",error)})
+}
+
+export const changeCookbookNameAPI =(cookbook_id, new_name) =>{
+	let data = {
+		"cookbook_id" : cookbook_id,
+		"new_name" : new_name
+	}
+	let queryURL = CONFIG.CHANGE_COOKBOOK_NAME_URL;
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] changeCookbookNameAPI error",error)})
+}
+
+export const deleteCookbookAPI =(cookbook_id) =>{
+	let data = {
+		"cookbook_id" : cookbook_id,
+	}
+	let queryURL = CONFIG.DELETE_COOKBOOK_URL;
+		return fetch(queryURL, {
+			method: "POST",
+			headers :{"Content-Type":"application/json"},
+			body : JSON.stringify(data)
+		})
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data;
+		})
+		.catch(error => {console.log("[ServiceClass] deleteCookbookAPI error",error)})
 }
 
 export const getBookmarkedRecipesAPI =(cookbookIds) =>{
