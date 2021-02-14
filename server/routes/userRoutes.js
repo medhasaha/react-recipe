@@ -174,6 +174,143 @@ router.post('/changeCookbook', (req, res) => {
   }
 });
 
+router.post('/changeCookbookName', (req,res) => {
+  if (req.session.loggedin) {
+    let cookbook_id = req.body.cookbook_id;
+    let new_name = req.body.new_name;
+    let updatedAt = new Date()
+    let sqlQuery = `UPDATE cookbooks SET cookbook_name = '${new_name}', updatedAt = ? WHERE cookbook_id = '${cookbook_id}'`;
+    conn.query(sqlQuery, updatedAt, (err, results) => {
+      if (err){
+        console.log("server err", err)
+        res.status(500).json({err : 1, errMsg : "Server Error"});
+        res.end();
+      }else {
+        res.status(200).json({success : 1});
+        res.end();
+      }           
+    });
+  } else {
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
+    res.end();
+  }
+})
+
+router.post('/deleteCookbook', (req, res) => {
+  if (req.session.loggedin) {
+    let _uuid = req.session.user.uuid;
+    let cookbook_id = req.body.cookbook_id
+    let cookbooks_delete_sqlQuery = `DELETE FROM cookbooks WHERE cookbook_id = '${cookbook_id}' AND uuid = '${_uuid}'`;
+    let cookbooks_recipes_delete_sqlQuery = `DELETE FROM cookbooks_recipes WHERE cookbook_id = '${cookbook_id}'`;
+    let recipes_delete_sqlQuery = `DELETE FROM recipes WHERE recipe_id IN (?)`;
+
+    let cookbooks_recipes_select_sqlQuery = `SELECT recipe_id FROM cookbooks_recipes WHERE cookbook_id = '${cookbook_id}'`;
+    let cookbooks_recipes_count_sqlQuery = `SELECT recipe_id, count(*) AS count FROM cookbooks_recipes WHERE recipe_id IN (?) GROUP BY recipe_id`;
+
+    //BEGIN TRANSACTION
+    conn.beginTransaction(function(err) {
+      if (err) { throw err; }
+      conn.query(cookbooks_recipes_select_sqlQuery, (err, results1) => {
+        if(err){
+          res.status(500).json({ err: 1, errMsg : err.sqlMessage, errCode : err.code})
+        }else{
+          let recipe_arr = [];
+          results1.map(item => recipe_arr.push(item.recipe_id))
+          conn.query(cookbooks_recipes_count_sqlQuery, [recipe_arr], (err, results2) => {
+            if(err){
+              res.status(500).json({ err: 1, errMsg : err.sqlMessage, errCode : err.code})
+            }else{
+              let remove_recipe_arr = [];
+              results2.map(item => {
+                if(item.count === 1){
+                  remove_recipe_arr.push(item.recipe_id)
+                }
+              })
+              let queryArr = [];
+
+              let promise1 = new Promise((resolve, reject) => {
+                conn.query(cookbooks_delete_sqlQuery, function (err, result) {
+                  if (err){
+                    reject(err);
+                    conn.rollback(function() {
+                      console.log("promise rollback...........",err.code, err.sqlMessage);
+                    });
+                  }
+                  else {
+                    resolve(result)
+                  }
+                })
+              })
+              queryArr.push(promise1)
+
+              let promise2 = new Promise((resolve, reject) => {
+                conn.query(cookbooks_recipes_delete_sqlQuery, function (err, result) {
+                  if (err){
+                    reject(err);
+                    conn.rollback(function() {
+                      console.log("promise rollback...........",err.code, err.sqlMessage);
+                    });
+                  }
+                  else {
+                    resolve(result)
+                  }
+                })
+              })
+              queryArr.push(promise2)
+
+              let promise3 = new Promise((resolve, reject) => {
+                conn.query(recipes_delete_sqlQuery, [remove_recipe_arr], function (err, result) {
+                  if (err){
+                    reject(err);
+                    conn.rollback(function() {
+                      console.log("promise rollback...........",err.code, err.sqlMessage);
+                    });
+                  }
+                  else {
+                    resolve(result)
+                  }
+                })
+              })
+              queryArr.push(promise3)
+
+              Promise.all(queryArr)
+              .then((result) => {
+                conn.commit(function(err) {
+                    if (err) {
+                      conn.rollback(function() {
+                        throw err;
+                      });
+                    }
+                    console.log('Transaction Complete.');
+                    // conn.end();
+                  });
+                res.status(200).json({success : 1})
+              })
+              .catch(err => {
+                console.log("promise all catch.........",err)
+                res.status(500).json({err: 1, errMsg : err.sqlMessage, errCode : err.code})
+                conn.commit(function(err) {
+                  if (err) {
+                    conn.rollback(function() {
+                      throw err;
+                    });
+                  }
+                  console.log('Transaction Complete.');
+                  // conn.end();
+                });
+              })//promise.all catch
+
+            }
+          })
+        }
+      })
+     })
+  } else {
+    res.status(400).json({err : 1, errMsg : "User Not Logged In", errCode : "UNAUTHORIZED"});
+    res.end();
+  }
+});
+
 router.get('/getBookmarkedRecipes', (req,res) => {
   if (req.session.loggedin) {
     let cookbookIds = req.query.cookbookIds;
@@ -370,7 +507,7 @@ router.post('/deleteBookmark', (req, res) => {
                 console.log('Transaction Complete.');
                 // conn.end();
               });
-            res.json({success : 1})
+            res.status(200).json({success : 1})
           })
           .catch(err => {
             console.log("promise all catch.........",err)

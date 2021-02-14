@@ -7,9 +7,11 @@ import AddIcon from '@material-ui/icons/AddCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import dashboardBackground from '../Assets/Images/background/dashboard_background.jpg';
-import { Typography, Card, Grid } from '@material-ui/core';
+import { Typography, Card, Grid, TextField} from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Cookbook from '../Assets/Icons/Cookbook.svg'
 import CookbookColored from '../Assets/Icons/CookbookColored.svg'
+import CheckIcon from '@material-ui/icons/Check';
 
 const style = theme => ({
 	root : {
@@ -62,7 +64,9 @@ class Dashboard extends Component {
 			cookbooks : JSON.parse(cookbooks) || [],
 			cookbooksData : null,
 			activeID : cookbookIds && cookbookIds.length > 0 && cookbookIds[0].cookbook_id || "",
-			isLoaded : false
+			isLoaded : false,
+			newCookbookFlag : false,
+			name : ""
 		}
 	}
 
@@ -96,6 +100,18 @@ class Dashboard extends Component {
 		})
 	}
 
+	newCookBook = () => {
+		this.setState({
+			newCookbookFlag : true
+		})
+	}
+
+	nameChangeHandler = (event) => {
+		this.setState({
+			name : event.target.value
+		})
+	}
+
   render(){
 		const { classes } = this.props;
 		return(
@@ -111,11 +127,28 @@ class Dashboard extends Component {
 
 							  <Grid item xs = {12} style = {{marginBottom : "20px"}}>
 									<Typography variant = "h6">
-									  My Cookbooks <AddIcon className = {classes.addCookbookIcon}/>
+									  My Cookbooks <AddIcon className = {classes.addCookbookIcon} onClick = {this.newCookbook}/>
 									</Typography>
 								</Grid>
 
 								<Grid container item xs = {12} spacing = {4}>
+								  <Grid item xs = {2}>
+										<Card className = {classes.card}>
+											<Grid item xs = {12}  className = {classes.gridCenter}>
+												<img src = {CookbookColored} className = {classes.logo}/>
+											</Grid>
+											<Grid item xs = {12}  className = {classes.gridCenter}>
+											  <TextField label="Add Name" size = "small"
+												           onChange = {this.nameChangeHandler}
+																		InputProps={{
+																			endAdornment: <InputAdornment position="end">
+																			                <CheckIcon/>
+																										</InputAdornment>,
+																		}}/>
+											</Grid>
+										</Card>	
+									</Grid>
+									
 									{this.state.cookbooks.length > 0 && this.state.cookbooks.map(item => (
 										<Grid item xs = {2}>
 											<Card className = {classes.card} onClick = {() => {this.changeActiveID(item.cookbook_id)}}>
