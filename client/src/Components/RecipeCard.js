@@ -113,7 +113,7 @@ const style = theme => ({
 class RecipeCard extends Component {
 	constructor(props){
 		super(props);
-		// console.log("RecipeCard: ",props)
+		console.log("RecipeCard: ",props)
 		const recipes = sessionStorage.getItem('recipes');
 		const savedRecipes = JSON.parse(recipes)
 		let isBookmarked = savedRecipes && savedRecipes.length > 0 && savedRecipes.includes(props.id) || false;
@@ -205,7 +205,7 @@ class RecipeCard extends Component {
 					activeID : cookbook_id,
 					openSuccessSnackbar : true,
 					successMessage : "Cookbook Changed!"
-				})
+				}, () => {this.props.callApi && this.props.callApi()})
 			}else	if(res.errCode === "UNAUTHORIZED"){
 				this.setState({
 					openErrorSnackbar : true,
@@ -235,7 +235,7 @@ class RecipeCard extends Component {
 					openDialog : false,
 					openSuccessSnackbar : true,
 					successMessage : "Bookmark Deleted Successfully!"
-				})
+				}, () => {this.props.callApi && this.props.callApi()})
 			}else	if(res.errCode === "UNAUTHORIZED"){
 				this.setState({
 					openErrorSnackbar : true,
@@ -309,7 +309,7 @@ class RecipeCard extends Component {
 							style = {{position : "relative"}}>
 					<img className={classes.image} src = {this.props.image}/>
 					<Grid container style = {{margin : "10px", width : "auto"}}>
-						<div className = {classes.titleDiv}>
+						<div className = {classes.titleDiv} style = {{maxWidth : this.props.maxSize ? this.props.maxSize : "160px"}}>
 							<Typography variant = "h6" className = {classes.title} 
 												onClick = {() => this.props.redirectToRecipeDetails(this.props.id)}>
 								{this.props.title}

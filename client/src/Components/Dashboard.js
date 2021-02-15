@@ -197,7 +197,6 @@ class Dashboard extends Component {
 	changeCookbookName = () => {
 		changeCookbookNameAPI(this.state.activeID, this.state.currentNewName)
 		.then(res => {
-			console.log(res)
 			if(res.success){
 				sessionStorage.setItem('cookbooks', JSON.stringify(res.results));
 				this.setState({
@@ -311,7 +310,9 @@ class Dashboard extends Component {
 															<RecipeCard id = {item.recipe_id} 
 																					image = {CONFIG.IMAGE_URL_RECIPE + item.recipe_id + "-312x231." + item.image_type}
 																					title = {item.recipe_name}
-																					redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
+																					redirectToRecipeDetails = {this.redirectToRecipeDetails}
+																					callApi = {this.getCookBooksData}
+																					maxSize = "120px"/>
 														</Grid>
 														))
 												: <Typography variant = "subtitle2" className = {classes.noRecipeText}>No Recipes Saved In This Cookbook</Typography>
