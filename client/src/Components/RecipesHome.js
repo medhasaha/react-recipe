@@ -254,12 +254,21 @@ const style = theme => ({
 		// borderRadius : "50%"
 	},
 	recipeTitle : {
-		fontFamily : "Fira Sans",
+		// fontFamily : "Fira Sans",
     textTransform : "uppercase",
     width : "60%",
     textAlign : "center",
 		fontSize : "20px",
-		fontWeight : "bold"
+		fontWeight : "bold",
+		color : theme.palette.text.primary,
+		marginTop:"0px !important", 
+    lineHeight: "1.3rem !important",
+    textOverflow: "ellipsis",
+    overflow:"hidden",
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical",
+    maxHeight:"3rem",
+		display: "-webkit-box",
 	},
 	recipeDivider : {
 		width : "20%",

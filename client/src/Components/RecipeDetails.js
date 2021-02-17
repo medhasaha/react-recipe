@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
-import CheckBox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,6 +19,7 @@ import placeholderIcon from '../Assets/Icons/placeholder.svg'
 import vegIcon from '../Assets/Icons/veg.svg'
 import nonVegIcon from '../Assets/Icons/nonVeg.svg'
 import veganIcon from '../Assets/Icons/vegan.svg'
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
 
 const style = theme => ({
 	root : {
@@ -29,10 +30,14 @@ const style = theme => ({
 	},
 	recipeImage : {
 		width : "100%",
-		height : "400px",
+		height : "auto",
+		maxHeight : "400px",
 		objectFit : "cover",
 		objectPosition : "center center",
 		// borderRadius : "50%"
+	},
+	title : {
+		"fontWeight" : 900
 	},
 	gridCenterFlex : {
 		alignItems : "center",
@@ -58,11 +63,13 @@ const style = theme => ({
 		width : "72px"
 	},
 	infoLabel : {
-		fontSize : "1rem",
+		fontSize : "2rem",
+		fontWeight : 400
 	},
 	infoLabelBold : {
 		fontSize : "1rem",
-		fontWeight : "bold"
+		fontWeight : 400
+		// fontWeight : "bold"
 	},
 	heading : {
 		fontSize : "2rem",
@@ -72,8 +79,10 @@ const style = theme => ({
 		width : "40px"
 	},
 	chip : {
-		border : "1px solid #932432",
-		marginLeft : "4px"
+		// border : "1px solid #932432",
+		backgroundColor : "#932432",
+		color : "#fff",
+		margin : "2px"
 	},
 	gridIngredients : {
 		// alignItems : "center",
@@ -101,6 +110,15 @@ const style = theme => ({
 	gridCenter : {
 		textAlign : "center"
 	},
+	saveRecipeButton : {
+		width : "100%",
+		color : "#fff",
+		borderRadius : "0px",
+		fontSize : "1rem",
+		"& .MuiSvgIcon-root" : {
+			fontSize : "20px"
+		}
+	}
 })
 
 class RecipeDetails extends Component {
@@ -148,8 +166,7 @@ class RecipeDetails extends Component {
 				similarRecipes : res[1].slice(0,5),
 				equipments : res[2].equipment,
 				isLoaded : true
-			}
-			, () => {
+			}, () => {
 				this.props.history.replace(this.props.history.location.pathname,
 					{ data: 
 						{ 
@@ -172,51 +189,51 @@ class RecipeDetails extends Component {
 		const { classes } = this.props;
 		return (
 			<Grid container>
-				<Grid item xs = {12} className = {classes.gridCenter} style = {{marginBottom : "30px"}}>
-					<Typography variant = "h4">{this.state.details.title}</Typography>
+				<Grid item xs = {12} className = {classes.gridCenter} style = {{marginBottom : "10px"}}>
+					<Typography variant = "h4" className = {classes.title}>{this.state.details.title}</Typography>
+				</Grid>
+
+				<Grid item xs = {12} className = {classes.gridCenterFlex} style = {{marginBottom : "20px"}}>
+					<Typography variant = "subtitle1" style = {{display : "inline"}}>
+						{"AUTHOR : "} {this.state.details.creditsText}
+					</Typography>
 				</Grid>
 
 				<Grid item xs = {4} className = {classes.gridCenter}>
-				      {/*style = {{"border-right" : "0.1px grey solid"}}*/}
+				  {/*style = {{"border-right" : "0.1px grey solid"}}*/}
 					{/*<Tooltip title = {"Cook Time"}><img src = {timeIcon} className = {classes.logo}/></Tooltip>*/}
-					<Typography variant = "button" className = {classes.infoLabelBold}>Cook Time</Typography>
-					<Typography variant = "subtitle1" className = {classes.infoLabel}>
+					<Typography variant = "h6" className = {classes.infoLabel}>
 						{this.state.details.readyInMinutes}
 					</Typography>
+					<Typography variant = "subtitle1" className = {classes.infoLabelBold}>Cook Time</Typography>
 				</Grid>
 
 				<Grid item xs = {4} className = {classes.gridCenter}>
-					<Typography variant = "button" className = {classes.infoLabelBold}>Servings</Typography>
-					<Typography variant = "subtitle1" className = {classes.infoLabel}>
+					<Typography variant = "h6" className = {classes.infoLabel}>
 						{this.state.details.servings}
 					</Typography>
+					<Typography variant = "subtitle1" className = {classes.infoLabelBold}>Servings</Typography>
 				</Grid>
 
-				<Grid item xs = {4} className = {classes.gridCenter}>
+				<Grid item xs = {4} className = {classes.gridCenterFlex}>
 					<Tooltip title = {this.state.details.vegetarian ? "Vegetarian" : "Non-vegetarian"}>
 						<img src = {this.state.details.vegetarian ? vegIcon : nonVegIcon} 
 						     className = {classes.vegIcon}/>
 					</Tooltip>
 				</Grid>
 
-				<Grid item xs = {12} className = {classes.gridCenterFlex} style = {{marginTop : "30px"}}>
-					<Typography variant = "subtitle1" style = {{display : "inline"}}>
-						{"AUTHOR : "} {this.state.details.creditsText}
-					</Typography>
-				</Grid>
-
-				<Grid item xs = {12} className = {classes.gridCenterFlex} style = {{marginTop : "10px"}}>
+				<Grid item xs = {12} style = {{marginTop : "10px"}}>
 					{this.state.details.dishTypes.length > 0 && this.state.details.dishTypes.map(item => (
-						<Chip label = {item} variant = "outlined" className = {classes.chip}/>
+						<Chip label = {item} className = {classes.chip}/>
 					))}
 					{this.state.details.cuisines.length > 0 && this.state.details.cuisines.map(item => (
-						<Chip label = {item} variant = "outlined" className = {classes.chip}/>
+						<Chip label = {item} className = {classes.chip}/>
 					))}
 					{this.state.details.diets.length > 0 && this.state.details.diets.map(item => (
-						<Chip label = {item} variant = "outlined" className = {classes.chip}/>
+						<Chip label = {item} className = {classes.chip}/>
 					))}
 					{this.state.details.occasions.length > 0 && this.state.details.occasions.map(item => (
-						<Chip label = {item} variant = "outlined" className = {classes.chip}/>
+						<Chip label = {item} className = {classes.chip}/>
 					))}
 				</Grid>
 
@@ -350,6 +367,12 @@ class RecipeDetails extends Component {
 			<Grid container className = {classes.root}>
 				<Grid item xs = {6} className = {classes.gridCenter}>
 					<img src = {this.state.details.image} className = {classes.recipeImage}/>
+					<Button variant = "contained" 
+					        className = {classes.saveRecipeButton} 
+									color = "secondary" 
+									startIcon={<LoyaltyIcon />}>
+					  Save Recipe
+					</Button>
 				</Grid>
 
 				<Grid item xs = {6} className = {classes.gridAboutRecipe}>

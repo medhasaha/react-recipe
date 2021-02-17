@@ -50,14 +50,12 @@ const style = theme => ({
 		maxHeight: "1.5rem",
 		display: "-webkit-box",
 		cursor : "pointer",
-		fontFamily : "Fira Sans",
 		textTransform : "capitalize",
 		// color : "#932432",
 		color : "#fff",
 		fontSize : "15px"
 	},
 	secondaryText : {
-		fontFamily : "Fira Sans",
 		cursor : "pointer",
 		display : "inline",
 		fontSize : "17px"
@@ -113,7 +111,7 @@ const style = theme => ({
 class RecipeCard extends Component {
 	constructor(props){
 		super(props);
-		console.log("RecipeCard: ",props)
+		// console.log("RecipeCard: ",props)
 		const recipes = sessionStorage.getItem('recipes');
 		const savedRecipes = JSON.parse(recipes)
 		let isBookmarked = savedRecipes && savedRecipes.length > 0 && savedRecipes.includes(props.id) || false;

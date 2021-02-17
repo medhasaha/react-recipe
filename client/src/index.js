@@ -17,7 +17,33 @@ const theme = createMuiTheme({
      },
   },
   typography: { 
-     useNextVariants: true
+     useNextVariants: true,
+     fontFamily: [
+      'Quicksand',
+      '"Fira Sans"', 
+      '"Oleo Script Swash Caps"',
+      'Ubuntu',  
+      '-apple-system', 
+      'BlinkMacSystemFont', 
+      '"Segoe UI"', 
+      'Roboto', 
+      'Oxygen',
+      'Cantarell', 
+      'Droid Sans', 
+      'Helvetica Neue',
+    ].join(','),
+    subtitle1: {
+      "fontWeight": 600,
+    },
+    body1: {
+      "fontWeight": 600,
+    },
+    subtitle2: {
+      "fontWeight": 500,
+    },
+    body2: {
+      "fontWeight": 500,
+    },
   }
 });
 

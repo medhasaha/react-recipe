@@ -11,12 +11,10 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const style = theme => ({
 	text : {
-		fontFamily : "Fira Sans",
 		fontSize : "17px",
 		// color : "#fff"
 	},
 	textSmall : {
-		fontFamily : "Fira Sans",
 		fontSize : "14px",
 		textTransform : "capitalize",
 		// color : "#fff"
