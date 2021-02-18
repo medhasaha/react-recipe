@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 import placeholderIcon from '../Assets/Icons/placeholder.svg'
 import vegIcon from '../Assets/Icons/veg.svg'
@@ -22,7 +23,7 @@ import veganIcon from '../Assets/Icons/vegan.svg'
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
 
 const style = theme => ({
-	root : {
+	gridDetails : {
     // border: "5px solid lightgray",
     margin: "50px 100px 0px 100px",
     width: "auto",
@@ -85,8 +86,9 @@ const style = theme => ({
 		margin : "2px"
 	},
 	gridIngredients : {
-		// alignItems : "center",
-		// display : "flex"
+		maxWidth : "40vw",
+		marginLeft : "auto",
+		marginRight : "auto"
 	},
 	ingredientImage : {
 		height : "70px",
@@ -97,14 +99,18 @@ const style = theme => ({
 	ingredientLabel : {
 		textAlign : "center"
 	},
+	ingredientName : {
+		fontWeight : 900,
+		color : "#932432",
+		cursor : "pointer"
+	},
 	ol_style : {
 		margin : "0px",
-		fontSize : "1.5rem",
-		lineHeight : "1.5",
+		// fontSize : "1.5rem",
+		lineHeight : "1.25",
 		// marginLeft : "10px"
 	},
 	instructionLabel : {
-		fontSize : "1.25rem",
 		margin : "0px 10px 10px 10px"
 	},
 	gridCenter : {
@@ -118,7 +124,13 @@ const style = theme => ({
 		"& .MuiSvgIcon-root" : {
 			fontSize : "20px"
 		}
-	}
+	},
+	tab : {
+		"& .MuiTab-textColorPrimary.Mui-selected" : {
+			color : "#932432"
+		},
+		marginBottom : "30px"
+	},
 })
 
 class RecipeDetails extends Component {
@@ -241,34 +253,87 @@ class RecipeDetails extends Component {
 		)
 	}
 
+	parseIngredients = (ingredient) => {
+		let fullString = ingredient.originalString;
+		let fullName = ingredient.originalName;
+		let ingredientName = "", unit_us = "", amount_us = "", unit_metric = "", amount_metric;
+		let id = ingredient.id
+		let image = ingredient.image
+		ingredientName = ingredient.name;
+		let nameObj = []
+		if(fullName.indexOf(ingredientName) === 0){
+			nameObj.push({"highlight" : true, "text" : ingredientName.trim()})
+			if(fullName.substring(ingredientName.length) != "") 
+			  nameObj.push({"highlight" : false, "text" : fullName.substring(ingredientName.length).trim()})
+		}else if(fullName.indexOf(ingredientName) > 0){
+			nameObj.push({"highlight" : false, "text" : fullName.substring(0, fullName.indexOf(ingredientName)).trim()})
+			nameObj.push({"highlight" : true, "text" : ingredientName})
+			if(fullName.substring(ingredientName.length) != "") 
+			  nameObj.push({"highlight" : false, "text" : fullName.substring(fullName.indexOf(ingredientName) + ingredientName.length)})
+		}
+		console.log(nameObj)
+		unit_us = ingredient.unit;
+		amount_us = ingredient.amount;
+		unit_metric = ingredient.measures.metric.unitShort;
+		amount_metric = ingredient.measures.metric.amount;
+		if(!Number.isInteger(amount_us)){
+			let index = fullString.indexOf(unit_us);
+			amount_us = fullString.substring(0,index).trim();
+		}
+		return({
+			id,
+			image,
+			ingredientName,
+			nameObj,
+			unit_us,
+			amount_us,
+			unit_metric,
+			amount_metric
+		})
+	}
+
+	ingredientCard = (item) => {
+		const { classes } = this.props;
+		let parsedIngredients = this.parseIngredients(item)
+		return(
+			<Grid container item xs = {12}>
+					<Grid item xs = {3} className = {classes.gridCenter}>
+						<img src = {parsedIngredients.image 
+												? CONFIG.IMAGE_URL_INGREDIENT + "_100x100/" + parsedIngredients.image 
+												: placeholderIcon} 
+								className = {classes.ingredientImage}/>
+					</Grid>
+
+					<Grid item xs = {3} className = {classes.gridCenter}>
+						<Typography variant = "subtitle1">{parsedIngredients.amount_us}</Typography>
+					</Grid>
+
+					<Grid item xs = {6} className = {classes.gridCenter}>
+						<Typography variant = "subtitle1" className = {classes.ingredientLabel}>
+							{/*<span>
+							  {parsedIngredients.unit_us}{" "}
+								{/*item.measures.us.amount}{" "}{item.measures.us.unitShort}{" "}
+								{item.measures.metric.amount !== item.measures.us.amount 
+									? "(" + item.measures.metric.amount + " " + item.measures.metric.unitShort + ") "
+								: ""
+							</span>
+							<span className = {classes.ingredientName}>{parsedIngredients.ingredientName}</span>*/}
+							{parsedIngredients.nameObj.map(item => (
+								!item.highlight
+								? <span>{item.text}{" "}</span>
+								: <span className = {classes.ingredientName}>{item.text}{" "}</span>
+							))}
+						</Typography>
+					</Grid>
+			</Grid>)
+	}
+
 	ingredientJSX = () => {
 		const { classes } = this.props;
 		return (
-		  <Grid container>
+		  <Grid container className = {classes.gridIngredients}>
 		    {this.state.details.extendedIngredients.length > 0 && this.state.details.extendedIngredients.map(item => (
-					<Grid item xs = {4}>
-						<Grid container style = {{marginBottom : "30px"}}>
-
-							<Grid item xs = {12} className = {classes.gridCenter}>
-								<img src = {item.image 
-														? CONFIG.IMAGE_URL_INGREDIENT + "_100x100/" + item.image 
-														: placeholderIcon} 
-										className = {classes.ingredientImage}/>
-							</Grid>
-
-							<Grid item xs = {12} className = {classes.gridCenter}>
-								<Typography variant = "subtitle1" className = {classes.ingredientLabel}>
-									{/*<CheckBox/>*/}
-									{item.measures.us.amount}{" "}{item.measures.us.unitShort}{" "}
-									{item.measures.metric.amount !== item.measures.us.amount 
-										? "(" + item.measures.metric.amount + " " + item.measures.metric.unitShort + ") "
-										: ""}
-									{item.name}
-								</Typography>
-							</Grid>
-
-						</Grid>
-					</Grid>
+					this.ingredientCard(item)
 		    ))}
 		  </Grid>
 		)
@@ -338,8 +403,8 @@ class RecipeDetails extends Component {
 
 		return (
 			<React.Fragment>
-				<Tabs value={this.state.tabValue} onChange={this.changeTabValue}
-							variant="fullWidth" indicatorColor="secondary" textColor="primary">
+				<Tabs value={this.state.tabValue} onChange={this.changeTabValue} className = {classes.tab}
+							 indicatorColor="secondary" textColor="primary" centered>
 					<Tab label="Ingredients"/>
 					<Tab label="Equipments"/>
 					<Tab label="Instructions"/>
@@ -364,7 +429,7 @@ class RecipeDetails extends Component {
 	detailsJSX = () => {
 		const { classes } = this.props;
 		return (
-			<Grid container className = {classes.root}>
+			<Grid container className = {classes.gridDetails}>
 				<Grid item xs = {6} className = {classes.gridCenter}>
 					<img src = {this.state.details.image} className = {classes.recipeImage}/>
 					<Button variant = "contained" 
@@ -379,7 +444,7 @@ class RecipeDetails extends Component {
 					{this.aboutRecipePanelJSX()}
 				</Grid>
 
-				<Grid item xs = {12}>
+				<Grid item xs = {12} style = {{marginTop : "30px"}}>
 				  {this.tabPanelJSX()}
 				</Grid>
 
@@ -416,7 +481,7 @@ class RecipeDetails extends Component {
   render(){
 		return(
 		this.state.isLoaded && 
-		  <Grid container spacing = {2}>
+		  <Grid container spacing = {2} style = {{paddingRight : "50px"}}>
 
 			  <Grid item xs = {12}>
 					<NavBar home = {true}/>
