@@ -9,7 +9,7 @@ const IMAGE_URL_INGREDIENT = "https://spoonacular.com/cdn/ingredients"
 const IMAGE_URL_EQUIPMENT = "https://spoonacular.com/cdn/equipment"
 
 const RECIPE_SEARCH_URL = BASE_URL_RECIPE + `/getRecipes`;
-const INGREDIENT_SEARCH = BASE_URL_RECIPE + `/recipes/findByIngredients`
+const RECIPE_INGREDIENT_SEARCH = BASE_URL_RECIPE + `/getRecipesByIngredient`
 const RECIPE_DETAILS_URL = BASE_URL_RECIPE + `/getRecipeDetails`;
 const SIMILAR_RECIPES_URL = BASE_URL_RECIPE + `/getSimilarRecipes`;
 const RANDOM_RECIPES = BASE_URL_RECIPE + `/getRandomRecipes`;
@@ -32,7 +32,7 @@ const DELETE_BOOKMARK_URL =  BASE_URL_USER + `/deleteBookmark`
 export default {
 	RECIPES_AUTOCOMPLETE,
     RECIPE_SEARCH_URL,
-    INGREDIENT_SEARCH,
+    RECIPE_INGREDIENT_SEARCH,
 	RECIPE_DETAILS_URL,
 	SIMILAR_RECIPES_URL,
 	RANDOM_RECIPES,

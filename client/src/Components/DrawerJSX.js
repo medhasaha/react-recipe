@@ -46,7 +46,13 @@ const style = theme => ({
 		width : "-webkit-fill-available",
 		// color : "#fff",
 		border: "1px solid #932432",
-	}
+	},
+	chip : {
+		// border : "1px solid #932432",
+		backgroundColor : "#932432",
+		color : "#fff",
+		margin : "2px"
+	},
 
 })
 
@@ -131,16 +137,16 @@ const DrawerJSX = (props) => {
 		<React.Fragment>
 
 			{props.selectedCuisine.length > 0 && props.selectedCuisine.map(item => (
-				item !== "" && <Chip label = {item} variant = "outlined" />
+				item !== "" && <Chip label = {item} variant = "outlined" className = {classes.chip}/>
 			))}
 			{props.selectedDiet.length > 0 && props.selectedDiet.map(item => (
-				item !== "" && <Chip label = {item} variant = "outlined" />
+				item !== "" && <Chip label = {item} variant = "outlined" className = {classes.chip}/>
 			))}
 			{props.selectedTolerance.length > 0 && props.selectedTolerance.map(item => (
-				item !== "" && <Chip label = {item} variant = "outlined" />
+				item !== "" && <Chip label = {item} variant = "outlined" className = {classes.chip}/>
 			))}
 			{props.selectedMealType.length > 0 && props.selectedMealType.map(item => (
-				item !== "" && <Chip label = {item} variant = "outlined" />
+				item !== "" && <Chip label = {item} variant = "outlined" className = {classes.chip}/>
 			))}
 
 			<List className = {classes.list}>

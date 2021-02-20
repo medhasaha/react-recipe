@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {recipeAutocompleteAPI, randomRecipeAPI, userAPI} from '../ServiceClass.js'
 import NavBar from './NavBar.js'
-import RecipeHeader from './RecipeHeader.js'
 
 import background1 from '../Assets/Images/background/background1.jpg';
 import background2 from '../Assets/Images/background/background2.jpg';
@@ -334,7 +333,7 @@ class RecipesHome extends Component {
 			inputValue : "",
 			loading : false,
 			open : false,
-			randomRecipes : []
+			randomRecipes : [],
 		}
 	}
 
@@ -418,7 +417,7 @@ class RecipesHome extends Component {
 	redirectToSearch = (query = "", cuisine = "", diet = "", mealType = "") => {
 		this.props.history.push({
 			pathname: `${this.props.baseURL}/search-results`,
-			search: `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=&mealType=${mealType}&sortParameter=&number=20&offset=0`,
+			search: `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=&mealType=${mealType}&ingredient=&sortParameter=&number=20&offset=0`,
 		});
 	}
 
@@ -613,7 +612,10 @@ class RecipesHome extends Component {
 						a healthy balance of nutrients and can be cost friendly too. So lets veganise your eveyday
 						recipes
 					</Typography>
-					<Button variant = "contained" className = {classes.veganButton}>Find Vegan Recipes</Button>
+					<Button variant = "contained" className = {classes.veganButton}
+					        onClick = {() => {this.redirectToSearch("", "", "vegan", "")}}>
+					  Find Vegan Recipes
+					</Button>
 				</Grid>
 			</Grid>
 		)

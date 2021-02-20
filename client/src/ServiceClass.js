@@ -26,6 +26,18 @@ export const recipeSearchAPI =(query, number, offset, cuisine = "", diet = "", i
 		.catch(error => {console.log("[ServiceClass] recipeSearchAPI error",error)})
 }
 
+export const recipeIngredientAPI =(ingredient, number, offset) =>{
+	let queryURL = CONFIG.RECIPE_INGREDIENT_SEARCH + `?ingredient=${ingredient}&number=${number}&offset=${offset}`
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.results;
+		})
+		.catch(error => {console.log("[ServiceClass] recipeIngredientAPI error",error)})
+}
+
 export const randomRecipeAPI =() =>{
 	// let queryURL = CONFIG.RANDOM_RECIPES + `?number=6&apiKey=${process.env.REACT_APP_SPOONACULAR_API_KEY}`
 	let queryURL = CONFIG.RANDOM_RECIPES

@@ -60,6 +60,25 @@ router.get('/getRandomRecipes', (req,res) => {
 	})
 })
 
+router.get('/getRecipesByIngredient', (req,res) => {
+	let ingredient = req.query.ingredient || ""
+	let number = req.query.number || 20
+	let offset = req.query.offset || 0
+
+	let queryURL = BASE_URL + `/findByIngredients?ingredients=${ingredient}&number=${number}&offset=${offset}&apiKey=${SPOONACULAR_API_KEY}`;
+	return fetch(queryURL)
+	.then(response => {
+		return response.json();
+	})
+	.then(data => {
+		res.status(200).json({results : data})
+	})
+	.catch(error => {
+		console.log("getRecipes error",error)
+		res.status(500).json({err : "Server Error"})
+	})
+})
+
 router.get('/getRecipeDetails', (req,res) => {
 	let id = req.query.id;
 	let queryURL = BASE_URL + `/${id}/information?includeNutrition=true&apiKey=${SPOONACULAR_API_KEY}`

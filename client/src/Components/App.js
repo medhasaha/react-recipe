@@ -16,6 +16,8 @@ const App = () => {
           {/*<Route exact path="/">
             <Redirect to="/recipe/home" />
           </Route>*/}
+          {/*<Redirect from="/" to="/recipe/home" />*/}
+          <Route exact path="/" render={(props) => {props.history.push({pathname: `/recipe/home`}); return null}} />
           <Route path="/recipe/home" render={(props) => <RecipesHome {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/search-results" render={(props) => <RecipeSearch {...props} baseURL={"/recipe"} />} />
           <Route path="/recipe/details/:id" render={(props) => <RecipeDetails {...props} baseURL={"/recipe"} />} />

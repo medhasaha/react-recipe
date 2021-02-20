@@ -3,17 +3,10 @@ import {recipeDetailsAPI, similarRecipesAPI, recipeEquipmentsAPI} from '../Servi
 import CONFIG from '../Config.js'
 import RecipeCard from './RecipeCard.js'
 import NutiritionChart from './NutritionChart.js'
-import RecipeHeader from './RecipeHeader.js'
 import NavBar from './NavBar.js';
 
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import {Grid, Typography, Tooltip, Button, Chip, Tab, Tabs, CircularProgress} from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
 
 import placeholderIcon from '../Assets/Icons/placeholder.svg'
@@ -21,6 +14,7 @@ import vegIcon from '../Assets/Icons/veg.svg'
 import nonVegIcon from '../Assets/Icons/nonVeg.svg'
 import veganIcon from '../Assets/Icons/vegan.svg'
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
+import LogoIcon from '../Assets/Icons/LogoColor.svg'
 
 const style = theme => ({
 	gridDetails : {
@@ -131,6 +125,29 @@ const style = theme => ({
 		},
 		marginBottom : "30px"
 	},
+	loader : {
+		color : "#932432",
+		// height : "60px",
+		// width : "60px",
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12,
+	},
+	loaderLogo : {
+		width : "40px",
+		height : "40px",
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+	},
+	launchIcon : {
+		fill : "#932432",
+		marginLeft : "20px",
+		verticalAlign : "middle",
+		cursor : "pointer"
+	}
 })
 
 class RecipeDetails extends Component {
@@ -157,15 +174,15 @@ class RecipeDetails extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if ( prevProps.match.params.id && this.props.match.params.id && prevProps.match.params.id !== this.props.match.params.id){
-      if (this.props.location.state && this.props.location.state.data) {
-        this.setState({ 
-					...this.props.location.state.data,
-					isLoading : true
-				});
-      } else {
-        this.getRecipeDetails(this.props.match.params.id);
-      }
+		if ( prevProps.match.params.id && this.props.match.params.id 
+			   && prevProps.match.params.id !== this.props.match.params.id){
+			this.setState({
+				details : null,
+				similarRecipes : [],
+				equipments : [],
+				isLoaded : false,
+				tabValue : 0	
+			}, () =>  this.getRecipeDetails(this.props.match.params.id))
     }
 	}
 
@@ -197,6 +214,13 @@ class RecipeDetails extends Component {
 		});
 	}
 
+	searchByIngredient = (ingredient) => {
+		this.props.history.push({
+			pathname: `${this.props.baseURL}/search-results`,
+			search: `?query=&cuisine=&diet=&intolerances=&mealType=&ingredient=${ingredient}&sortParameter=&number=20&offset=0`,
+		});
+	}
+
 	aboutRecipePanelJSX = () => {
 		const { classes } = this.props;
 		return (
@@ -208,6 +232,9 @@ class RecipeDetails extends Component {
 				<Grid item xs = {12} className = {classes.gridCenterFlex} style = {{marginBottom : "20px"}}>
 					<Typography variant = "subtitle1" style = {{display : "inline"}}>
 						{"AUTHOR : "} {this.state.details.creditsText}
+							<a href = {this.state.details.sourceUrl} target="_blank" className = {classes.link}>
+								<LaunchIcon className = {classes.launchIcon}/>
+							</a>
 					</Typography>
 				</Grid>
 
@@ -255,11 +282,11 @@ class RecipeDetails extends Component {
 
 	parseIngredients = (ingredient) => {
 		let fullString = ingredient.originalString;
-		let fullName = ingredient.originalName;
+		let fullName = ingredient.originalName.toLowerCase();
 		let ingredientName = "", unit_us = "", amount_us = "", unit_metric = "", amount_metric;
 		let id = ingredient.id
 		let image = ingredient.image
-		ingredientName = ingredient.name;
+		ingredientName = ingredient.name.toLowerCase();
 		let nameObj = []
 		if(fullName.indexOf(ingredientName) === 0){
 			nameObj.push({"highlight" : true, "text" : ingredientName.trim()})
@@ -270,8 +297,9 @@ class RecipeDetails extends Component {
 			nameObj.push({"highlight" : true, "text" : ingredientName})
 			if(fullName.substring(ingredientName.length) != "") 
 			  nameObj.push({"highlight" : false, "text" : fullName.substring(fullName.indexOf(ingredientName) + ingredientName.length)})
+		}else{//-1
+			nameObj.push({"highlight" : true, "text" : ingredient.nameClean.trim()})
 		}
-		console.log(nameObj)
 		unit_us = ingredient.unit;
 		amount_us = ingredient.amount;
 		unit_metric = ingredient.measures.metric.unitShort;
@@ -310,18 +338,10 @@ class RecipeDetails extends Component {
 
 					<Grid item xs = {6} className = {classes.gridCenter}>
 						<Typography variant = "subtitle1" className = {classes.ingredientLabel}>
-							{/*<span>
-							  {parsedIngredients.unit_us}{" "}
-								{/*item.measures.us.amount}{" "}{item.measures.us.unitShort}{" "}
-								{item.measures.metric.amount !== item.measures.us.amount 
-									? "(" + item.measures.metric.amount + " " + item.measures.metric.unitShort + ") "
-								: ""
-							</span>
-							<span className = {classes.ingredientName}>{parsedIngredients.ingredientName}</span>*/}
 							{parsedIngredients.nameObj.map(item => (
 								!item.highlight
 								? <span>{item.text}{" "}</span>
-								: <span className = {classes.ingredientName}>{item.text}{" "}</span>
+								: <span className = {classes.ingredientName} onClick = {() => this.searchByIngredient(item.text)}>{item.text}{" "}</span>
 							))}
 						</Typography>
 					</Grid>
@@ -479,35 +499,42 @@ class RecipeDetails extends Component {
 	}
 
   render(){
+		const { classes } = this.props;
 		return(
-		this.state.isLoaded && 
 		  <Grid container spacing = {2} style = {{paddingRight : "50px"}}>
 
-			  <Grid item xs = {12}>
+				<Grid item xs = {12}>
 					<NavBar home = {true}/>
 				</Grid>
-
-				<Grid item xs = {10}>
-				  {this.detailsJSX()}
-				</Grid>
-
-				<Grid item xs = {2}>
-					<Grid container spacing = {2} style = {{marginTop : "50px"}}>
-						{this.state.similarRecipes.length > 0 && 
-							this.state.similarRecipes.map(item => (
-							<Grid item xs = {12}>
-								<RecipeCard id = {item.id} 
-														image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-312x231." + item.imageType}
-														title = {item.title}
-														servings = {item.servings}
-														time = {item.readyInMinutes}
-														boxShadow = {false}
-														redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
-							</Grid>
-						))}
+				
+				{this.state.isLoaded
+				? <React.Fragment>
+				  <Grid item xs = {10}>
+						{this.detailsJSX()}
 					</Grid>
-				</Grid>
-		  </Grid>
+
+					<Grid item xs = {2}>
+						<Grid container spacing = {2} style = {{marginTop : "50px"}}>
+							{this.state.similarRecipes.length > 0 && 
+								this.state.similarRecipes.map(item => (
+								<Grid item xs = {12}>
+									<RecipeCard id = {item.id} 
+															image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-312x231." + item.imageType}
+															title = {item.title}
+															servings = {item.servings}
+															time = {item.readyInMinutes}
+															boxShadow = {false}
+															redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
+								</Grid>
+							))}
+						</Grid>
+					</Grid>
+					</React.Fragment>
+				: <React.Fragment>
+						<img src = {LogoIcon} className = {classes.loaderLogo}/>
+						<CircularProgress color="inherit" size = {60} className = {classes.loader}/>
+					</React.Fragment>}
+			</Grid>
 		)
 	}
 }

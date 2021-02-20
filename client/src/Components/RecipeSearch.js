@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {recipeSearchAPI} from '../ServiceClass.js'
+import {recipeSearchAPI, recipeIngredientAPI} from '../ServiceClass.js'
 import RecipeCard from './RecipeCard.js';
 import CONFIG from '../Config.js';
 import NavBar from './NavBar.js';
@@ -7,85 +7,24 @@ import DrawerJSX from './DrawerJSX';
 import queryString from "query-string";
 
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Drawer from '@material-ui/core/Drawer';
-import { Typography } from '@material-ui/core';
+import { Grid, Typography, TextField, Drawer, CircularProgress, Button, Fab } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import SearchIcon from '@material-ui/icons/Search';
+import LogoIcon from '../Assets/Icons/LogoColor.svg'
 
-const sample = {
-	"results": [
-	{
-	"id": 1161745,
-	"title": "Cake Balls",
-	"image": "https://spoonacular.com/recipeImages/1161745-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 636754,
-	"title": "Cake De Naranja",
-	"image": "https://spoonacular.com/recipeImages/636754-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 1499853,
-	"title": "Cake Mix Donuts",
-	"image": "https://spoonacular.com/recipeImages/1499853-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 636756,
-	"title": "Cake Batter Chocolates",
-	"image": "https://spoonacular.com/recipeImages/636756-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 636768,
-	"title": "Cake with wine and olive oil",
-	"image": "https://spoonacular.com/recipeImages/636768-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 1025438,
-	"title": "Cake Mix Cookie Bars Brownie",
-	"image": "https://spoonacular.com/recipeImages/1025438-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 636766,
-	"title": "Cake with lemon, rosewater and pistachios",
-	"image": "https://spoonacular.com/recipeImages/636766-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 641745,
-	"title": "Dump Cake",
-	"image": "https://spoonacular.com/recipeImages/641745-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 656444,
-	"title": "Plum Cake",
-	"image": "https://spoonacular.com/recipeImages/656444-312x231.jpg",
-	"imageType": "jpg"
-	},
-	{
-	"id": 654018,
-	"title": "Oreo Cake",
-	"image": "https://spoonacular.com/recipeImages/654018-312x231.jpg",
-	"imageType": "jpg"
-	}
-	],
-	"offset": 0,
-	"number": 10,
-	"totalResults": 453
-	}
 const style = theme => ({
 	root : {
 		backgroundColor: "rgba(255, 255, 255, 0.65)",
 		// backgroundColor: "#212121",
 		display : "flex",
 	},
-	header : {
+	autocompleteDiv : {
 		margin : "104px 60px 0px 300px", 
+		display : "flex",
+		justifyContent : "flex-end"
+	},
+	header : {
+		margin : "30px 60px 0px 300px", 
 	},
 	overlay : {
 			backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -96,6 +35,8 @@ const style = theme => ({
 			display : "flex",
 	},
 	headerTitle : {
+		fontWeight : "600",
+		textTransform : "capitalize"
 		// color : "#fff",
 		// fontFamily : "Oleo Script Swash Caps"
 	},
@@ -121,8 +62,124 @@ const style = theme => ({
 	},
 	drawerContainer : {
 
-	}
+	},
+autocomplete : {
+	// backgroundColor : "white",
+	display : "inline-flex",
+	margin : "0px 2px 0px 0px",
+	backgroundColor: "rgba(255, 255, 255, 0.65)",
+},
+textField : {
+	"& .MuiFormLabel-root": {
+		color: "#932432"//
+	},
+	"&:hover .MuiFormLabel-root": {
+		color: "#932432"
+	},
+	"& .MuiInputBase-input" : {
+		color : "#932432",//
+	},
+	"&:hover .MuiInputBase-input" : {
+		color : "#932432",
+	},
+	"& .Mui-focused .MuiInputBase-input" : {
+		color : "#932432"
+	},
+	"& .Mui-focused" : {
+		color : "#932432",
+	},
+	"& .MuiOutlinedInput-notchedOutline" : {
+		border : "2px solid #932432"//
+	},
+	"&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+		border : "2px solid #932432"
+	},
+	"& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+		border : "2px solid #932432"
+	},
+},
+searchButton : {
+	height  : "100%",
+	border: "2px solid #932432",
+	backgroundColor: "rgba(255,255,255,0.2)",
+},
+searchIcon : {
+	color : "white",
+	fontSize : "2rem",
+	color : "#932432",
+	fill : "#932432"
+},
+loader : {
+	color : "#932432",
+	// height : "60px",
+	// width : "60px",
+	position: 'absolute',
+  top: '50%',
+  left: '50%',
+  marginTop: -12,
+  marginLeft: -12,
+},
+loaderLogo : {
+	width : "40px",
+	height : "40px",
+	position: 'absolute',
+  top: '50%',
+  left: '50%',
+}
 })
+
+const sample = [
+	{
+	"id": 133439,
+	"title": "cake",
+	"imageType": "jpg"
+	},
+	{
+	"id": 165381,
+	"title": "chai",
+	"imageType": "jpg"
+	},
+	{
+	"id": 495920,
+	"title": "cups",
+	"imageType": "jpg"
+	},
+	{
+	"id": 34150,
+	"title": "chili",
+	"imageType": "jpg"
+	},
+	{
+	"id": 1125636,
+	"title": "crema",
+	"imageType": "jpg"
+	},
+	{
+	"id": 102861,
+	"title": "cacik",
+	"imageType": "jpg"
+	},
+	{
+	"id": 630955,
+	"title": "craig",
+	"imageType": "jpg"
+	},
+	{
+	"id": 117905,
+	"title": "champ",
+	"imageType": "png"
+	},
+	{
+	"id": 234120,
+	"title": "calas",
+	"imageType": "jpg?itok=m1zglj97"
+	},
+	{
+	"id": 376278,
+	"title": "clams",
+	"imageType": "jpeg"
+	}
+	]
 
 class RecipeSearch extends Component {
 	constructor(props){
@@ -130,6 +187,11 @@ class RecipeSearch extends Component {
 		// console.log("RecipeSearch: ",props)
 		let query_string = queryString.parse(props.location.search)
 		this.state = {
+			autocompleteOptions : [],
+			value : "",
+			inputValue : "",
+			open : false,
+			loading : false,
 			results : [],
 			isLoaded : false,
 			query : query_string.query || "",
@@ -137,6 +199,7 @@ class RecipeSearch extends Component {
 			selectedDiet : query_string.diet || "",
 			selectedTolerance : query_string.intolerances || "",
 			selectedMealType : query_string.mealType || "",
+			ingredient : query_string.ingredient || "",
 			sortParameter : query_string.sortParameter || "",
 			number : query_string.number || 20,
 			offset : query_string.offset || 0,
@@ -153,18 +216,18 @@ class RecipeSearch extends Component {
 				selectedDiet : query_string.diet || "",
 				selectedTolerance : query_string.intolerances || "",
 				selectedMealType : query_string.mealType || "",
+				ingredient : query_string.ingredient || "",
 				sortParameter : query_string.sortParameter || "",
 				number : query_string.number || 20,
 				offset : query_string.offset || 0,
         isLoaded: true
       });
     } else {
-			this.searchRecipes(this.state.query, 20, 0, this.state.selectedCuisine, this.state.selectedDiet, this.state.selectedTolerance, this.state.selectedMealType, this.state.sortParameter);
+			if(this.state.ingredient)
+			  this.searchIngredient(this.state.ingredient, 20, 0);
+			else
+			  this.searchRecipes(this.state.query, 20, 0, this.state.selectedCuisine, this.state.selectedDiet, this.state.selectedTolerance, this.state.selectedMealType, this.state.sortParameter);
 		}
-		// this.setState({
-		// 	results : sample.results,
-		// 	isLoaded : true
-		// })
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -177,11 +240,15 @@ class RecipeSearch extends Component {
 				selectedTolerance : currentQuery.intolerances || "",
 				selectedMealType : currentQuery.mealType || "",
 				sortParameter : currentQuery.sortParameter || "",
+				ingredient : currentQuery.ingredient || "",
 				number : currentQuery.number || 20,
 				offset : currentQuery.offset || 0,
-				isLoaded: true
+				isLoaded: false
 			}, () => {
-        this.searchRecipes(this.state.query, 20, 0, this.state.selectedCuisine, this.state.selectedDiet, this.state.selectedTolerance, this.state.selectedMealType, this.state.sortParameter);
+				if(this.state.ingredient)
+					this.searchIngredient(this.state.ingredient, 20, 0);
+				else
+          this.searchRecipes(this.state.query, 20, 0, this.state.selectedCuisine, this.state.selectedDiet, this.state.selectedTolerance, this.state.selectedMealType, this.state.sortParameter);
 			});
     }
 	}
@@ -195,8 +262,22 @@ class RecipeSearch extends Component {
 				isLoaded : true
 			}, () => {
 				this.props.history.replace(
-					`${this.props.history.location.pathname}?query=${this.state.query}&cuisine=${this.state.selectedCuisine}&diet=${this.state.selectedDiet}&intolerances=${this.state.selectedTolerance}&mealType=${this.state.selectedMealType}&sortParameter=${this.state.sortParameter}&number=${this.state.number}&offset=${this.state.offset}`,
+					`${this.props.history.location.pathname}?query=${this.state.query}&cuisine=${this.state.selectedCuisine}&diet=${this.state.selectedDiet}&intolerances=${this.state.selectedTolerance}&mealType=${this.state.selectedMealType}&ingredient=${this.state.ingredient}sortParameter=${this.state.sortParameter}&number=${this.state.number}&offset=${this.state.offset}`,
 					{ data: { results: res.results } });
+			})
+		}).catch(err => console.log(err))
+	}
+
+	searchIngredient = (ingredient, number, offset) => {
+		recipeIngredientAPI(ingredient, number, offset)
+		.then(res => {
+			this.setState({
+				results : res,
+				isLoaded : true
+			}, () => {
+				this.props.history.replace(
+					`${this.props.history.location.pathname}?query=${this.state.query}&cuisine=${this.state.selectedCuisine}&diet=${this.state.selectedDiet}&intolerances=${this.state.selectedTolerance}&mealType=${this.state.selectedMealType}&ingredient=${this.state.ingredient}&sortParameter=${this.state.sortParameter}&number=${this.state.number}&offset=${this.state.offset}`,
+					{ data: { results: res } });
 			})
 		}).catch(err => console.log(err))
 	}
@@ -212,12 +293,45 @@ class RecipeSearch extends Component {
 			selectedCuisine : values.selectedCuisine.join(),
 			selectedDiet : values.selectedDiet.join(),
 			selectedTolerance : values.selectedIntolerance.join(),
-			selectedMealType : values.selectedMealType.join()
+			selectedMealType : values.selectedMealType.join(),
+			isLoaded : false
 		}, () => {
 			this.props.history.replace(
-				`${this.props.history.location.pathname}?query=${this.state.query}&cuisine=${this.state.selectedCuisine}&diet=${this.state.selectedDiet}&intolerances=${this.state.selectedTolerance}&mealType=${this.state.selectedMealType}&sortParameter=${this.state.sortParameter}&number=${this.state.number}&offset=${this.state.offset}`);
+				`${this.props.history.location.pathname}?query=${this.state.query}&cuisine=${this.state.selectedCuisine}&diet=${this.state.selectedDiet}&intolerances=${this.state.selectedTolerance}&mealType=${this.state.selectedMealType}&ingredient=${this.state.ingredient}sortParameter=${this.state.sortParameter}&number=${this.state.number}&offset=${this.state.offset}`);
 		}
 		)
+	}
+
+	autocompleteChangeHandler = (e, newValue) => {
+		// console.log("newValue",newValue)
+		this.setState({
+			value : newValue,
+			loading : this.state.open === true && this.state.autocompleteOptions.length > 0 ? true : false,
+		})
+	}
+
+	autocompleteInputChangeHandler = (e, newInputValue) => {
+		this.setState({
+			inputValue : newInputValue
+		}
+		, () => {
+			this.setState({
+				autocompleteOptions : sample,
+				loading : false
+			})
+		}
+		)
+	}
+
+	newSearch = (query = "") => {
+		this.setState({
+			isLoaded : false
+		},() => {
+			this.props.history.push({
+				pathname: `${this.props.baseURL}/search-results`,
+				search: `?query=${query}&cuisine=&diet=&intolerances=&mealType=&ingredient=&sortParameter=&number=20&offset=0`,
+			});
+		})
 	}
 
   render(){
@@ -230,28 +344,66 @@ class RecipeSearch extends Component {
 						<NavBar home = {true}/>
 					</Grid>
 
+					<Grid item xs = {12} className = {classes.autocompleteDiv}>
+					<Autocomplete
+						options={this.state.autocompleteOptions}
+						getOptionLabel={(option) => option.title}
+						onOpen={() => {this.setState({open : true}) }}
+						onClose={() => { this.setState({open : false}) }}
+						loading = {this.state.loading}
+						style={{ width: "45%" }}
+						className = {classes.autocomplete}
+						freeSolo
+						disableClearable
+						value = {this.state.value}//value selected by the user
+						onChange = {(e, newValue) => this.autocompleteChangeHandler(e, newValue)}
+						inputValue = {this.state.inputValue} //value displayed in textbox
+						onInputChange = {(e, newInputValue) => {this.autocompleteInputChangeHandler(e, newInputValue)}}
+						renderInput={(params) => 
+							<TextField {...params} variant="outlined"
+																		className = {classes.textField}
+																		InputProps={{...params.InputProps,
+																									endAdornment: (
+																										<React.Fragment>
+																											{this.state.loading ? <CircularProgress color="inherit" size={20} /> : null}
+																											{params.InputProps.endAdornment}
+																										</React.Fragment>),
+																								}} />} />
+						<Button variant="contained" 
+						        disableElevation 
+										className = {classes.searchButton}
+										onClick = {() => {this.newSearch(this.state.inputValue, "", "", "")}}>
+							<SearchIcon className = {classes.searchIcon}/>
+						</Button>
+					</Grid>
+
 					<Grid item xs = {12} className = {classes.header}>
-						<Typography variant = "h6" className = {classes.headerTitle}>
-							{"Recipes For " + this.state.query}
-						</Typography>
-		      </Grid>
+						{this.state.query &&
+							<Typography variant = "h4" className = {classes.headerTitle}>
+								{"Recipes For " + this.state.query}
+							</Typography>}
+						</Grid>
 
 				  <Grid item xs = {12} style = {{margin : "30px 60px 0px 300px"}}>
-					{this.state.isLoaded && this.state.results.length > 0 &&
-						<Grid container className = {classes.root} spacing = {4}>
-							{this.state.results.map(item => (
-								<Grid item xs = {3}>
-									<RecipeCard id = {item.id} 
-															image = {item.image}
-															// image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-480x360.jpg"}
-															title = {item.title} 
-															// servings = {item.servings}
-															// time = {item.readyInMinutes}
-															boxShadow = {false}
-															redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
-								</Grid>
-							))}
-						</Grid>}
+					{this.state.isLoaded && this.state.results && this.state.results.length > 0
+						? <Grid container className = {classes.root} spacing = {4}>
+								{this.state.results.map(item => (
+									<Grid item xs = {3}>
+										<RecipeCard id = {item.id} 
+																image = {item.image}
+																// image = {CONFIG.IMAGE_URL_RECIPE + item.id + "-480x360.jpg"}
+																title = {item.title} 
+																// servings = {item.servings}
+																// time = {item.readyInMinutes}
+																boxShadow = {false}
+																redirectToRecipeDetails = {this.redirectToRecipeDetails}/>
+									</Grid>
+								))}
+							</Grid>
+						: <React.Fragment>
+								<img src = {LogoIcon} className = {classes.loaderLogo}/>
+							  <CircularProgress color="inherit" size = {60} className = {classes.loader}/>
+							</React.Fragment>}
 					</Grid>
 
 					<Drawer className={classes.drawer} variant="persistent" open = {true} classes={{ paper: classes.drawerPaper,}}>
