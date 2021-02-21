@@ -4,6 +4,8 @@ import CONFIG from '../Config.js'
 import RecipeCard from './RecipeCard.js'
 import NutiritionChart from './NutritionChart.js'
 import NavBar from './NavBar.js';
+import BookmarkDialog from './BookmarkDialog.js'
+
 
 import { withStyles } from '@material-ui/core/styles';
 import {Grid, Typography, Tooltip, Button, Chip, Tab, Tabs, CircularProgress} from '@material-ui/core';
@@ -154,13 +156,17 @@ class RecipeDetails extends Component {
 	constructor(props){
 		super(props);
 		// console.log("RecipeDetails: ",props)
-
+		const recipes = sessionStorage.getItem('recipes');
+		const savedRecipes = JSON.parse(recipes)
+		let isBookmarked = savedRecipes && savedRecipes.length > 0 && savedRecipes.includes(parseInt(this.props.match.params.id))|| false;
 		this.state = {
 			details : null,
 			similarRecipes : [],
 			equipments : [],
 			isLoaded : false,
-			tabValue : 0
+			tabValue : 0,
+			goToDialog : false,
+			isBookmarked : isBookmarked,
 		}
 	}
 
@@ -455,8 +461,9 @@ class RecipeDetails extends Component {
 					<Button variant = "contained" 
 					        className = {classes.saveRecipeButton} 
 									color = "secondary" 
+									onClick = {this.goToDialogMethod}
 									startIcon={<LoyaltyIcon />}>
-					  Save Recipe
+					  {this.state.isBookmarked ? "Edit Bookmark" : "Save Recipe"}
 					</Button>
 				</Grid>
 
@@ -467,35 +474,30 @@ class RecipeDetails extends Component {
 				<Grid item xs = {12} style = {{marginTop : "30px"}}>
 				  {this.tabPanelJSX()}
 				</Grid>
-
-				{/*<Grid item xs = {6} style = {{marginTop : "40px", "border-right" : "0.1px grey solid"}}>
-					<Grid container style = {{margin : "0px 20px 0px 0px", width : "auto"}}>
-						<Grid item xs = {12} className = {classes.gridCenter} style = {{marginBottom : "20px"}}>
-							<Typography variant = "button" className = {classes.heading}>Ingredients</Typography>
-						</Grid>
-						{this.ingredientJSX()}
-
-						<Grid item xs = {12} className = {classes.gridCenter} style = {{marginBottom : "20px"}}>
-							<Typography variant = "button" className = {classes.heading}>Equipments</Typography>
-						</Grid>
-							{this.equipmentsJSX()}
-					</Grid>
-				</Grid>
-
-				<Grid item xs = {6} style = {{marginTop : "40px"}}>
-					<Grid container style = {{margin : "0px 0px 0px 20px", width : "auto"}}>
-						<Grid item xs = {12} className = {classes.gridCenter} style = {{marginBottom : "20px"}}>
-							<Typography variant = "button" className = {classes.heading}>Instructions</Typography>
-						</Grid>
-							{this.instructionsJSX()}
-					</Grid>
-				</Grid>
-
-				<Grid item xs = {12}>
-					<NutiritionChart data = {this.state.details.nutrition.nutrients}/>
-				</Grid>*/}
 		  </Grid>
 		)
+	}
+
+	goToDialogMethod = () => {
+		this.setState({
+			goToDialog : false
+		},() => {
+			this.setState({
+				goToDialog : true
+			})
+		})
+	}
+
+	returnBookmarkState = (isBookmarked) => {
+		this.setState({
+			isBookmarked : isBookmarked,
+		})
+	}
+
+	returnDialogState = () => {
+		this.setState({
+			goToDialog : false
+		})
 	}
 
   render(){
@@ -504,7 +506,7 @@ class RecipeDetails extends Component {
 		  <Grid container spacing = {2} style = {{paddingRight : "50px"}}>
 
 				<Grid item xs = {12}>
-					<NavBar home = {true}/>
+					<NavBar home = {true}  search = {true}/>
 				</Grid>
 				
 				{this.state.isLoaded
@@ -534,6 +536,12 @@ class RecipeDetails extends Component {
 						<img src = {LogoIcon} className = {classes.loaderLogo}/>
 						<CircularProgress color="inherit" size = {60} className = {classes.loader}/>
 					</React.Fragment>}
+
+				{this.state.goToDialog &&
+					<BookmarkDialog isBookmarked = {this.state.isBookmarked}
+													id = {this.state.details.id} 
+													title = {this.state.details.title}
+													returnBookmarkState = {this.returnBookmarkState}/>}
 			</Grid>
 		)
 	}

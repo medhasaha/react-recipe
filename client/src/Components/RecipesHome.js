@@ -417,7 +417,7 @@ class RecipesHome extends Component {
 	redirectToSearch = (query = "", cuisine = "", diet = "", mealType = "") => {
 		this.props.history.push({
 			pathname: `${this.props.baseURL}/search-results`,
-			search: `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=&mealType=${mealType}&ingredient=&sortParameter=&number=20&offset=0`,
+			search: `?query=${query}&cuisine=${cuisine}&diet=${diet}&intolerances=&mealType=${mealType}&ingredient=&sortParameter=`,
 		});
 	}
 
@@ -627,7 +627,7 @@ class RecipesHome extends Component {
 			<Grid container className = {classes.root}>
 
 				<Grid item xs = {12}>
-					<NavBar home = {true}/>
+					<NavBar home = {true} search = {false}/>
 				</Grid>
 				<Grid item xs = {12} className = {classes.bgGrid}>
 					{this.sliderJSX()}

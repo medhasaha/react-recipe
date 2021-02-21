@@ -106,6 +106,7 @@ const DrawerJSX = (props) => {
 		const values = selectedDiet.some( item => item === dietList[selectedIndex])
 									 ? selectedDiet.filter( item => item !== dietList[selectedIndex])
 									 : selectedDiet.concat([dietList[selectedIndex]]);	
+									 console.log(values)
 		setSelectedDiet(values)
 	}
 
@@ -203,32 +204,35 @@ const DrawerJSX = (props) => {
 
 			<Divider width = "100%" className = {classes.divider}/>
 
-			<List className = {classes.list}>
-				<ListItem button onClick = {() => intoleranceCollapseHandler()}>
-					<ListItemText primary="Intolerance" classes = {{primary : classes.text}}/>
-				  {intolerance ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
-				</ListItem>
-				<Collapse in={intolerance} timeout="auto" unmountOnExit>
-					<List component="div" disablePadding>
-						{intoleranceList.map((item, index) => (
-							<ListItem button className={classes.nested} 
-												classes = {{root : classes.listItemRoot}}
-												onClick = {() => {intoleranceSelectHandler(index)}}>
-								<ListItemIcon className = {classes.listItemIcon}>
-									<Checkbox
-										checked={selectedIntolerance.some( i => i === item)}
-										tabIndex={-1}
-										className = {classes.checkBox}
-										disableRipple/>
-								</ListItemIcon>
-								<Typography variant = "subtitle2" className = {classes.textSmall}>{item}</Typography>
-							</ListItem>
-						))}
-					</List>
-				</Collapse>
-			</List>
+			{props.currentTab !== "videos" &&
+			<React.Fragment>
+				<List className = {classes.list}>
+					<ListItem button onClick = {() => intoleranceCollapseHandler()}>
+						<ListItemText primary="Intolerance" classes = {{primary : classes.text}}/>
+						{intolerance ? <ExpandLess className = {classes.icon}/> : <ExpandMore className = {classes.icon}/>}
+					</ListItem>
+					<Collapse in={intolerance} timeout="auto" unmountOnExit>
+						<List component="div" disablePadding>
+							{intoleranceList.map((item, index) => (
+								<ListItem button className={classes.nested} 
+													classes = {{root : classes.listItemRoot}}
+													onClick = {() => {intoleranceSelectHandler(index)}}>
+									<ListItemIcon className = {classes.listItemIcon}>
+										<Checkbox
+											checked={selectedIntolerance.some( i => i === item)}
+											tabIndex={-1}
+											className = {classes.checkBox}
+											disableRipple/>
+									</ListItemIcon>
+									<Typography variant = "subtitle2" className = {classes.textSmall}>{item}</Typography>
+								</ListItem>
+							))}
+						</List>
+					</Collapse>
+				</List>
 
-			<Divider width = "100%" className = {classes.divider}/>
+				<Divider width = "100%" className = {classes.divider}/>
+			</React.Fragment>}
 
 			<List className = {classes.list} >
 				<ListItem button onClick = {() => mealCollapseHandler()}>

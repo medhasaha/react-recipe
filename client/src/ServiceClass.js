@@ -26,8 +26,8 @@ export const recipeSearchAPI =(query, number, offset, cuisine = "", diet = "", i
 		.catch(error => {console.log("[ServiceClass] recipeSearchAPI error",error)})
 }
 
-export const recipeIngredientAPI =(ingredient, number, offset) =>{
-	let queryURL = CONFIG.RECIPE_INGREDIENT_SEARCH + `?ingredient=${ingredient}&number=${number}&offset=${offset}`
+export const recipeVideosAPI =(query, number, offset, cuisine = "", diet = "", mealType = "") =>{
+	let queryURL = CONFIG.RECIPE_VIDEOS_URL + `?query=${query}&cuisine=${cuisine}&diet=${diet}&mealType=${mealType}&number=${number}&offset=${offset}`
 		return fetch(queryURL)
 		.then(response => {
 			return response.json();
@@ -35,7 +35,19 @@ export const recipeIngredientAPI =(ingredient, number, offset) =>{
 		.then(data => {
 			return data.results;
 		})
-		.catch(error => {console.log("[ServiceClass] recipeIngredientAPI error",error)})
+		.catch(error => {console.log("[ServiceClass] recipeVideosAPI error",error)})
+}
+
+export const ingredientSearchAPI =(ingredient, number, offset) =>{
+	let queryURL = CONFIG.INGREDIENT_SEARCH_URL + `?ingredient=${ingredient}&number=${number}&offset=${offset}`
+		return fetch(queryURL)
+		.then(response => {
+			return response.json();
+		})
+		.then(data => {
+			return data.results;
+		})
+		.catch(error => {console.log("[ServiceClass] ingredientSearchAPI error",error)})
 }
 
 export const randomRecipeAPI =() =>{

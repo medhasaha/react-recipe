@@ -24,7 +24,8 @@ const style = theme => ({
 	title: {
 		padding : "0px 20px 0px 0px",
 		margin : "0px 20px 0px 0px",
-		fontFamily : "Oleo Script Swash Caps"
+		fontFamily : "Oleo Script Swash Caps",
+		cursor : "pointer"
 		// borderRight : "2px solid white",
 	},
 	appBarItems : {
@@ -88,6 +89,7 @@ class NavBar extends Component {
 		// console.log(props)
 		super(props);
 		this.state = {
+			query : ""
 		}
 	}
 
@@ -109,6 +111,28 @@ class NavBar extends Component {
 			});
 	}
 
+	redirectToHome = () => {
+		this.props.history.push({
+			pathname: `/recipe/home`,
+		});
+	}
+
+	inputBaseChangeHandler = (e) => {
+		this.setState({
+			query : e.target.value
+		})
+	}
+
+	handleKeyPress = e => {
+    if (e.key === "Enter") {
+      if (this.state.query.length > 0)
+				this.props.history.push({
+					pathname: `/recipe/search-results`,
+					search: `?query=${this.state.query}&cuisine=&diet=&intolerances=&mealType=&ingredient=&sortParameter=`,
+				});
+    }
+  };
+
   render(){
 		const { classes } = this.props;
 		let isUserLoggedIn = this.getToken() ;
@@ -117,21 +141,24 @@ class NavBar extends Component {
 				<AppBar position="static" className = {classes.appBar} style = {{backgroundColor : this.props.home === true ? "#0d1010" : "#932432"}}>
 					<Toolbar>
 					  <div>
-							<Typography className={classes.title} variant="h4" noWrap>
+							<Typography className={classes.title} variant="h4" noWrap onClick = {this.redirectToHome}>
 								Recipe 	<img src = {LogoIcon} className = {classes.logo}/>
 							</Typography>
 						</div>
 						<div className = {classes.appBarItems}>
 						  
 						</div>
-						<div className={classes.search}>
-							<div className={classes.searchIcon}>
-								<SearchIcon />
-							</div>
-							<InputBase placeholder="Search…"
-								classes={{ root: classes.inputRoot, input: classes.inputInput, }}
-								inputProps={{ 'aria-label': 'search' }}/>
-						</div>
+						{this.props.search &&
+							<div className={classes.search}>
+								<div className={classes.searchIcon}>
+									<SearchIcon />
+								</div>
+								<InputBase placeholder="Search…"
+									onChange = {this.inputBaseChangeHandler}
+									onKeyDown={this.handleKeyPress}
+									classes={{ root: classes.inputRoot, input: classes.inputInput, }}
+									inputProps={{ 'aria-label': 'search' }}/>
+							</div>}
 						<div>
 							<Button className = {classes.login} variant="outlined" noWrap
 							        onClick = {this.redirect}>

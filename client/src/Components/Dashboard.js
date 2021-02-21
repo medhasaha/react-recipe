@@ -219,7 +219,7 @@ class Dashboard extends Component {
 				<Grid container className = {classes.root}>
 
 					<Grid item xs = {12}>
-						<NavBar home = {true}/>
+						<NavBar home = {true}  search = {true}/>
 					</Grid>
 
 					<Grid container style = {{margin : "84px 40px 0px 40px"}} >
